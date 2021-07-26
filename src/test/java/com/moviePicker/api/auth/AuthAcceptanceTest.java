@@ -87,7 +87,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         //given
 
         //when
-        ExtractableResponse<Response> response = authorizationTokenSendRequest(null);
+        ExtractableResponse<Response> response = authorizationTokenSendRequest("");
 
         //then
         assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
@@ -126,9 +126,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("테스트 07: 이메일 인증코드 확인 실패 401 (로그인하지 않았을 때)")
     public void 이메일_인증코드_확인_실패_UNAUTHORIZED() {
         //given
+        AuthorizationTokenRequest request = new AuthorizationTokenRequest("");
 
         //when
-        ExtractableResponse<Response> response = checkAuthorizationTokenRequest(null, null);
+        ExtractableResponse<Response> response = checkAuthorizationTokenRequest("", request);
 
         //then
         assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
@@ -155,9 +156,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     public void 이메일_인증코드_확인_실패_CONFLICT() {
         //given
         String accessToken = getAuthorizationTokenLogin();
+        AuthorizationTokenRequest request = new AuthorizationTokenRequest(authorizationToken);
 
         //when
-        ExtractableResponse<Response> response = checkAuthorizationTokenRequest(accessToken, null);
+        ExtractableResponse<Response> response = checkAuthorizationTokenRequest(accessToken, request);
 
         //then
         assertThat(response.statusCode()).isEqualTo(CONFLICT.value());
@@ -183,9 +185,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("테스트 11: 비밀번호 초기화 메일 보내기 실패 404 (해당 이메일을 가진 회원이 존재하지 않을 때)")
     public void 비밀번호_초기화_메일_보내기_실패_NOT_FOUND() {
         //given
+        PasswordResetRequest request = PasswordResetRequest.builder()
+                .email("")
+                .build();
 
         //when
-        ExtractableResponse<Response> response = passwordResetTokenSendRequest(null);
+        ExtractableResponse<Response> response = passwordResetTokenSendRequest(request);
 
         //then
         assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
@@ -196,9 +201,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("테스트 12: 비밀번호 초기화 메일 보내기 성공 200")
     public void 비밀번호_초기화_메일_보내기_성공() {
         //given
+        PasswordResetRequest request = PasswordResetRequest.builder()
+                .email(authorizedEmail)
+                .build();
 
         //when
-        ExtractableResponse<Response> response = passwordResetTokenSendRequest(authorizedEmail);
+        ExtractableResponse<Response> response = passwordResetTokenSendRequest(request);
 
         //then
         assertThat(response.statusCode()).isEqualTo(OK.value());
@@ -211,8 +219,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         //given
         PasswordResetRequest request = PasswordResetRequest.builder()
                 .email(getPasswordResetTokenEmail)
-                .password(null)
-                .passwordCheck(null)
                 .passwordRestToken(passwordResetToken)
                 .build();
 
@@ -270,7 +276,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .email(getPasswordResetTokenEmail)
                 .password(resetPassword)
                 .passwordCheck(resetPassword)
-                .passwordRestToken(null)
                 .build();
 
         //when
@@ -363,10 +368,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> passwordResetTokenSendRequest(String email) {
+    private ExtractableResponse<Response> passwordResetTokenSendRequest(PasswordResetRequest request) {
         return RestAssured
                 .given().log().all()
-                .body(email)
+                .body(request)
                 .contentType(APPLICATION_JSON_VALUE)
                 .when().post("/auth/password-reset")
                 .then().log().all()
