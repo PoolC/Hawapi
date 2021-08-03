@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.test.context.ActiveProfiles;
 
+import static com.moviePicker.api.member.MemberDataLoader.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -20,16 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @ActiveProfiles("memberDataLoader")
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 public class AuthAcceptanceTest extends AcceptanceTest {
-    public static String authorizedEmail = "jasotn12@naver.com",
-            unauthorizedEmail = "anfro2520@gmail.com",
-            expelledEmail = "expelled@gmail.com",
-            getAuthorizationTokenEmail = "authorizationToken@gmail.com",
-            expiredAuthorizationTokenEmail = "expiredAuthorizationToken@gmail.com",
-            getPasswordResetTokenEmail = "passwordResetToken@gmail.com",
-            expiredPasswordResetTokenEmail = "expiredPasswordResetToken@gmail.com",
-            notExistEmail = "notExist@gmail.com",
-            password = "password123!", wrongPassword = "wrongPassword",
-            resetPassword = "resetPassword123!";
+
 
     public static String authorizationToken = "authorization_token", passwordResetToken = "password_reset_token";
 

@@ -22,13 +22,32 @@ public class MemberDataLoader implements CommandLineRunner {
     private final MemberRepository memberRepository;
     private final PasswordHashProvider passwordHashProvider;
 
+
+    public static String authorizedEmail = "jasotn12@naver.com",
+            unauthorizedEmail = "anfro2520@gmail.com",
+            expelledEmail = "expelled@gmail.com",
+            getAuthorizationTokenEmail = "authorizationToken@gmail.com",
+            expiredAuthorizationTokenEmail = "expiredAuthorizationToken@gmail.com",
+            getPasswordResetTokenEmail = "passwordResetToken@gmail.com",
+            expiredPasswordResetTokenEmail = "expiredPasswordResetToken@gmail.com",
+            notExistEmail = "notExist@gmail.com",
+            password = "password123!",
+            resetPassword = "resetPassword123!", wrongPassword = "wrongPassword",
+            exisitingName = "name", existingNickName="nickname";
+
+
+
+
+
+
+
     @Override
     public void run(String... args) {
         memberRepository.save(
                 Member.builder()
                         .UUID(UUID.randomUUID().toString())
                         .email(authorizedEmail)
-                        .nickname(authorizedEmail)
+                        .nickname(existingNickName)
                         .passwordHash(passwordHashProvider.encodePassword(password))
                         .passwordResetToken(null)
                         .passwordResetTokenValidUntil(null)
