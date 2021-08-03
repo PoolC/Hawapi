@@ -1,9 +1,9 @@
 package com.moviePicker.api.auth;
 
 import com.moviePicker.api.AcceptanceTest;
-import com.moviePicker.api.domain.auth.dto.LoginRequest;
-import com.moviePicker.api.domain.auth.dto.LoginResponse;
-import com.moviePicker.api.domain.auth.dto.PasswordResetRequest;
+import com.moviePicker.api.auth.dto.LoginRequest;
+import com.moviePicker.api.auth.dto.LoginResponse;
+import com.moviePicker.api.auth.dto.PasswordResetRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

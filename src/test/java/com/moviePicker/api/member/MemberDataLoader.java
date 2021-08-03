@@ -1,10 +1,10 @@
 package com.moviePicker.api.member;
 
-import com.moviePicker.api.domain.auth.infra.PasswordHashProvider;
-import com.moviePicker.api.domain.member.domain.Member;
-import com.moviePicker.api.domain.member.domain.MemberRole;
-import com.moviePicker.api.domain.member.domain.MemberRoles;
-import com.moviePicker.api.domain.member.repository.MemberRepository;
+import com.moviePicker.api.auth.infra.PasswordHashProvider;
+import com.moviePicker.api.member.domain.Member;
+import com.moviePicker.api.member.domain.MemberRole;
+import com.moviePicker.api.member.domain.MemberRoles;
+import com.moviePicker.api.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
