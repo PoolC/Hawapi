@@ -6,13 +6,13 @@ import lombok.Getter;
 
 @Getter
 public class LoginRequest {
-    private final String loginId;
+    private final String email;
     private final String password;
 
     @JsonCreator
     @Builder
-    public LoginRequest(String loginId, String password) {
-        this.loginId = loginId;
+    public LoginRequest(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 }
