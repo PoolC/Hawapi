@@ -1,7 +1,7 @@
 package com.moviePicker.api.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.moviePicker.api.common.exception.NotSameException;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +20,12 @@ public class MemberCreateRequest {
 
     @JsonCreator
     @Builder
-    public MemberCreateRequest(String name, String email, String password, String passwordCheck, String nickname) {
+    public MemberCreateRequest(
+            @JsonProperty("name") String name,
+            @JsonProperty("email") String email,
+            @JsonProperty("password") String password,
+            @JsonProperty("passwordCheck") String passwordCheck,
+            @JsonProperty("nickname") String nickname) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -38,16 +43,15 @@ public class MemberCreateRequest {
     }
 
 
-
     private void checkPasswordValid() {
         Optional.ofNullable(password)
                 .orElseThrow(() -> new IllegalArgumentException("패스워드를 입력하지 않았습니다."));
         Optional.ofNullable(passwordCheck)
                 .orElseThrow(() -> new IllegalArgumentException("패스워드 체크를 작성하지 않았습니다."));
 
-        if(password.equals(""))
+        if (password.equals(""))
             throw new IllegalArgumentException("비밀번호를 작성하지 않았습니다.");
-        if(passwordCheck.equals(""))
+        if (passwordCheck.equals(""))
             throw new IllegalArgumentException("비밀번호체크를 작성하지 않았습니다.");
 
 
@@ -61,7 +65,7 @@ public class MemberCreateRequest {
 
         Optional.ofNullable(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("닉네임을 작성하지 않았습니다."));
-        if(nickname.equals("") ) {
+        if (nickname.equals("")) {
             throw new IllegalArgumentException("닉네임을 작성하지 않았습니다.");
         }
     }
@@ -69,7 +73,7 @@ public class MemberCreateRequest {
     private void checkEmailValid() {
         Optional.ofNullable(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일을 작성하지 않았습니다."));
-        if(email.equals("") ) {
+        if (email.equals("")) {
             throw new IllegalArgumentException("이메일을 작성하지 않았습니다.");
         }
     }
@@ -77,8 +81,9 @@ public class MemberCreateRequest {
     private void checkNameValid() {
         Optional.ofNullable(name)
                 .orElseThrow(() -> new IllegalArgumentException("이름을 작성하지 않았습니다."));
-        if(name.equals("") ){
-            throw new IllegalArgumentException("이름을 작성하지 않았습니다.");}
+        if (name.equals("")) {
+            throw new IllegalArgumentException("이름을 작성하지 않았습니다.");
+        }
     }
 
 

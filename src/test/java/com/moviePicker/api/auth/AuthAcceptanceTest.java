@@ -33,9 +33,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .email(unauthorizedEmail)
                 .password(wrongPassword)
                 .build();
-
+        System.out.println("request = " + request.getEmail());
         //when
         ExtractableResponse<Response> response = loginRequest(request);
+
 
         //then
         assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
@@ -361,7 +362,18 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .getAccessToken();
     }
 
-    private static ExtractableResponse<Response> loginRequest(LoginRequest request) {
+    public static String adminLogin() {
+        LoginRequest request = LoginRequest.builder()
+                .email(adminEmail)
+                .password(password)
+                .build();
+
+        return loginRequest(request)
+                .as(LoginResponse.class)
+                .getAccessToken();
+    }
+
+    public static ExtractableResponse<Response> loginRequest(LoginRequest request) {
         return RestAssured
                 .given().log().all()
                 .body(request)

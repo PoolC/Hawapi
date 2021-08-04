@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static com.moviePicker.api.auth.AuthAcceptanceTest.*;
+import static com.moviePicker.api.auth.AuthAcceptanceTest.authorizationToken;
+import static com.moviePicker.api.auth.AuthAcceptanceTest.passwordResetToken;
 
 @Component
 @Profile("memberDataLoader")
@@ -31,14 +32,11 @@ public class MemberDataLoader implements CommandLineRunner {
             getPasswordResetTokenEmail = "passwordResetToken@gmail.com",
             expiredPasswordResetTokenEmail = "expiredPasswordResetToken@gmail.com",
             notExistEmail = "notExist@gmail.com",
-            password = "password123!",
+            adminEmail = "admin@gmail.com",
+
+    password = "password123!",
             resetPassword = "resetPassword123!", wrongPassword = "wrongPassword",
-            exisitingName = "name", existingNickName="nickname";
-
-
-
-
-
+            existingName = "name", existingNickName = "nickname", adminNickName = "admin";
 
 
     @Override
@@ -133,6 +131,19 @@ public class MemberDataLoader implements CommandLineRunner {
                         .authorizationTokenValidUntil(null)
                         .reportCount(0)
                         .roles(MemberRoles.getDefaultFor(MemberRole.MEMBER))
+                        .build());
+        memberRepository.save(
+                Member.builder()
+                        .UUID(UUID.randomUUID().toString())
+                        .email(adminEmail)
+                        .nickname(adminNickName)
+                        .passwordHash(passwordHashProvider.encodePassword(password))
+                        .passwordResetToken(null)
+                        .passwordResetTokenValidUntil(null)
+                        .authorizationToken(null)
+                        .authorizationTokenValidUntil(null)
+                        .reportCount(0)
+                        .roles(MemberRoles.getDefaultFor(MemberRole.ADMIN))
                         .build());
     }
 }
