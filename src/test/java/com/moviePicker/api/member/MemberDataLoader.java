@@ -36,16 +36,17 @@ public class MemberDataLoader implements CommandLineRunner {
 
     password = "password123!",
             resetPassword = "resetPassword123!", wrongPassword = "wrongPassword",
-            existingName = "name", existingNickName = "nickname", adminNickName = "admin";
+            existingName = "name", authorizedNickname = "nickname", adminNickName = "admin";
 
 
     @Override
     public void run(String... args) {
+
         memberRepository.save(
                 Member.builder()
                         .UUID(UUID.randomUUID().toString())
                         .email(authorizedEmail)
-                        .nickname(existingNickName)
+                        .nickname(authorizedNickname)
                         .passwordHash(passwordHashProvider.encodePassword(password))
                         .passwordResetToken(null)
                         .passwordResetTokenValidUntil(null)

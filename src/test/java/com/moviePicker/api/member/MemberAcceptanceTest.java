@@ -1,6 +1,7 @@
 package com.moviePicker.api.member;
 
 
+import com.moviePicker.api.AcceptanceTest;
 import com.moviePicker.api.member.dto.MemberCreateRequest;
 import com.moviePicker.api.member.dto.MemberUpdateRequest;
 import io.restassured.RestAssured;
@@ -12,7 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.test.context.ActiveProfiles;
 
-import static com.moviePicker.api.auth.AuthAcceptanceTest.*;
+import static com.moviePicker.api.auth.AuthAcceptanceTest.authorizedLogin;
+import static com.moviePicker.api.auth.AuthAcceptanceTest.unauthorizedLogin;
 import static com.moviePicker.api.member.MemberDataLoader.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
@@ -21,15 +23,15 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @ActiveProfiles("memberDataLoader")
 @TestMethodOrder(MethodOrderer.DisplayName.class)
-public class MemberAcceptanceTest {
+public class MemberAcceptanceTest extends AcceptanceTest {
 
     public static String
 
-            name = "moviePicker", emptyName = "", nullName = null,
-            nickname = "딸기성하", emptyNickName = "", nullNickName = null, wrongFormatNickname = "asdf",
-            password = "password123!", emptyPassword = "", nullPassword = null, wrongPassword = "wrongPassword", wrongFormatPassword = "aaa11",
-            passwordCheck = "password123!", nullPasswordCheck = null, wrongPasswordCheck = "asdfsd23@",
-            email = "anfro2520@gmail.com", emptyEmail = "", nullEmail = null, wrongFormatEmail = "strawberrySungha.com@naver";
+            name = "moviePicker", emptyName = "",
+            nickname = "딸기성하", emptyNickName = "", wrongFormatNickname = "asdf",
+            password = "password123!", emptyPassword = "", wrongPassword = "wrongPassword", wrongFormatPassword = "aaa11",
+            passwordCheck = "password123!", wrongPasswordCheck = "asdfsd23@",
+            email = "anfro2520@gmail.com", emptyEmail = "", wrongFormatEmail = "strawberrySungha.com@naver";
 
 
     @Test
@@ -39,9 +41,9 @@ public class MemberAcceptanceTest {
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
                 .nickname(nickname)
-                .name(name)
+                .name(emptyName)
                 .password(password)
-                .passwordCheck(nullPasswordCheck)
+                .passwordCheck(passwordCheck)
                 .email(email)
                 .build();
 
@@ -56,6 +58,7 @@ public class MemberAcceptanceTest {
     @Test
     @DisplayName("테스트 02: 회원가입 실패 400: 패스워드가 맞지 않을 때")
     public void 회원가입_실패_BAD_REQUEST_2() throws Exception {
+
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
                 .nickname(nickname)
@@ -100,7 +103,7 @@ public class MemberAcceptanceTest {
     public void 회원가입_실패_CONFLICT_1() {
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
-                .nickname(existingNickName)
+                .nickname(authorizedNickname)
                 .name(name)
                 .password(password)
                 .passwordCheck(passwordCheck)
@@ -202,7 +205,7 @@ public class MemberAcceptanceTest {
         String accessToken = authorizedLogin();
         MemberUpdateRequest request = MemberUpdateRequest.builder()
                 .email(authorizedEmail)
-                .nickname(existingNickName)
+                .nickname(authorizedNickname)
                 .password(password)
                 .passwordCheck(passwordCheck)
                 .build();
@@ -240,24 +243,13 @@ public class MemberAcceptanceTest {
         String accessToken = unauthorizedLogin();
 
         // when
-        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, existingNickName);
+        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, authorizedNickname);
 
         // then
         assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
 
     }
 
-    @Test
-    @DisplayName("테스트 14: 회원탈퇴 실패 403 : 관리자가 아닐 시")
-    public void 회원_탈퇴_실패_FORBIDDEN_2() throws Exception {
-        // given
-        String accessToken = adminLogin();
-        // when
-        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, adminNickName);
-        // then
-        assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
-
-    }
 
     @Test
     @DisplayName("테스트 15: 회원 탈퇴 실패  400  : 잘못된 닉네임일때")
