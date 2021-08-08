@@ -11,12 +11,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
+
+import javax.print.attribute.standard.Media;
 
 import static com.moviePicker.api.auth.AuthAcceptanceTest.authorizedLogin;
 import static com.moviePicker.api.auth.AuthAcceptanceTest.unauthorizedLogin;
 import static com.moviePicker.api.member.MemberDataLoader.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.BOOLEAN;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -28,10 +32,10 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     public static String
 
             name = "moviePicker", emptyName = "",
-            nickname = "딸기성하", emptyNickName = "", wrongFormatNickname = "asdf",
+            nickname = "딸기성하", emptyNickName = "", wrongFormatNickname = "asdf", new_nickname="새로운닉네임",
             password = "password123!", emptyPassword = "", wrongPassword = "wrongPassword", wrongFormatPassword = "aaa11",
             passwordCheck = "password123!", wrongPasswordCheck = "asdfsd23@",
-            email = "anfro2520@gmail.com", emptyEmail = "", wrongFormatEmail = "strawberrySungha.com@naver";
+            email = "new_email@gmail.com", emptyEmail = "", wrongFormatEmail = "strawberrySungha.com@naver";
 
 
     @Test
@@ -163,7 +167,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = "";
         MemberUpdateRequest request = MemberUpdateRequest.builder()
-                .email(authorizedEmail)
                 .nickname(nickname)
                 .password(password)
                 .passwordCheck(passwordCheck)
@@ -184,7 +187,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = authorizedLogin();
         MemberUpdateRequest request = MemberUpdateRequest.builder()
-                .email(authorizedEmail)
                 .nickname(nickname)
                 .password(wrongFormatPassword)
                 .passwordCheck(passwordCheck)
@@ -204,7 +206,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = authorizedLogin();
         MemberUpdateRequest request = MemberUpdateRequest.builder()
-                .email(authorizedEmail)
                 .nickname(authorizedNickname)
                 .password(password)
                 .passwordCheck(passwordCheck)
@@ -223,8 +224,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = authorizedLogin();
         MemberUpdateRequest request = MemberUpdateRequest.builder()
-                .email(authorizedEmail)
-                .nickname(nickname)
+                .nickname(new_nickname)
                 .password(password)
                 .passwordCheck(passwordCheck)
                 .build();
@@ -269,12 +269,49 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = authorizedLogin();
         // when
-        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, existingName);
+        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, authorizedNickname);
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
 
     }
 
+    @Test
+    @DisplayName("테스트 17: 이메일 중복체크")
+    public void 이메일_중복체크_성고() throws Exception{
+        //given
+        String existing_email="anfro2520@gmail.com";
+        //when
+        ExtractableResponse<Response> response = sameEmailRequest(existing_email);
+        //then
+        assertThat(response.statusCode()).isEqualTo(CONFLICT.value());
+    }
+
+    @Test
+    @DisplayName("테스트 18: 닉네임 중복체크")
+    public void 닉네임_중복체크_성고() throws Exception{
+        //given
+        String existing_nickname="anfro2520@gmail.com";
+        //when
+        ExtractableResponse<Response> response = sameNicknameRequest(existing_nickname);
+        //then
+        assertThat(response.statusCode()).isEqualTo(CONFLICT.value());
+    }
+
+    private static ExtractableResponse<Response> sameEmailRequest(String email){
+        return RestAssured
+                .given().log().all()
+                .when().get("/members/emails/{email}",email)
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> sameNicknameRequest(String nickname){
+        return RestAssured
+                .given().log().all()
+                .when().get("/members/nicknames/{nickname}",nickname)
+                .then().log().all()
+                .extract();
+    }
 
     private static ExtractableResponse<Response> memberCreateRequest(MemberCreateRequest request) {
         return RestAssured
@@ -301,7 +338,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .when().put("/members/{nickname}", nickname)
+                .when().put("/members/{nickname}",nickname)
                 .then().log().all()
                 .extract();
     }

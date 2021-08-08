@@ -6,12 +6,15 @@ import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.member.domain.MemberRole;
 import com.moviePicker.api.member.domain.MemberRoles;
 import com.moviePicker.api.member.dto.MemberCreateRequest;
+import com.moviePicker.api.member.dto.MemberUpdateRequest;
 import com.moviePicker.api.member.exception.DuplicateMemberException;
 import com.moviePicker.api.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -39,12 +42,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void create(MemberCreateRequest request) {
-        boolean hasDuplicate = memberRepository.existsByEmailOrNickname(request.getEmail(), request.getNickname());
-        if (hasDuplicate) {
-            throw new DuplicateMemberException("There are one or more duplicates of the following: email, NickName");
-
-        }
+    public void createMember(MemberCreateRequest request) {
+        checkEmailExist(request.getEmail());
+        checkNicknameExist(request.getNickname());
 
         memberRepository.save(
                 Member.builder()
@@ -59,7 +59,40 @@ public class MemberServiceImpl implements MemberService {
                         .reportCount(0)
                         .roles(MemberRoles.getDefaultFor(MemberRole.UNACCEPTED))
                         .build()
-
         );
+
     }
+
+    @Transactional
+    public void updateMember(Member loginMember,MemberUpdateRequest request) {
+        checkNicknameExist(request.getNickname());
+        checkEmailNotExist(loginMember.getEmail());
+        loginMember.ChangePasswordNickname(request);
+    }
+
+    @Transactional
+    public void deleteMember(String nickname){
+        memberRepository.deleteByNickname(nickname);
+    }
+
+    @Override
+    public void checkEmailExist(String email) {
+        if(memberRepository.findByEmail(email).isPresent()){
+            throw new DuplicateMemberException("해당 이메일로 이미 회원 등록을 하였습니다.");
+        }
+    }
+
+    @Override
+    public void checkNicknameExist(String nickname){
+        if(memberRepository.findByNickname(nickname).isPresent()){
+            throw new DuplicateMemberException("해당 닉네임의 회원이 이미 존재합니다.");
+        }
+    }
+
+    private void checkEmailNotExist(String email) {
+        if(!memberRepository.findByEmail(email).isPresent()){
+            throw new DuplicateMemberException("해당 이메일에 해당하는 회원이 없습니다.");
+        }
+    }
+
 }

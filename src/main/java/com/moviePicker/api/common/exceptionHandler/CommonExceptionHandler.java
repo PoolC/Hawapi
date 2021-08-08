@@ -2,6 +2,9 @@ package com.moviePicker.api.common.exceptionHandler;
 
 import com.moviePicker.api.auth.exception.*;
 import com.moviePicker.api.common.exception.NotSameException;
+import com.moviePicker.api.member.exception.DuplicateMemberException;
+import com.moviePicker.api.member.exception.NotLoginExcpetion;
+import com.moviePicker.api.member.exception.NotNicknameMatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -40,6 +43,24 @@ public class CommonExceptionHandler {
     @ExceptionHandler({ExpiredTokenException.class, WrongTokenException.class})
     public ResponseEntity<Map<String, String>> conflictHandler(Exception e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Collections.singletonMap("message", e.getMessage()));
+    }
+
+    @ExceptionHandler({DuplicateMemberException.class})
+    public ResponseEntity<Map<String, String>> sameMemberHandler(Exception e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Collections.singletonMap("message", e.getMessage()));
+    }
+
+    @ExceptionHandler({NotLoginExcpetion.class})
+    public ResponseEntity<Map<String, String>> notloginHandler(Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap("message", e.getMessage()));
+    }
+
+    @ExceptionHandler({NotNicknameMatchException.class})
+    public ResponseEntity<Map<String, String>> notSameNicknameHandler(Exception e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(Collections.singletonMap("message", e.getMessage()));
     }
 }

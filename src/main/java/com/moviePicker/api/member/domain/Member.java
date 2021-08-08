@@ -7,6 +7,8 @@ import com.moviePicker.api.auth.exception.UnauthenticatedException;
 import com.moviePicker.api.auth.exception.UnauthorizedException;
 import com.moviePicker.api.auth.exception.WrongTokenException;
 import com.moviePicker.api.common.domain.TimestampEntity;
+import com.moviePicker.api.member.dto.MemberUpdateRequest;
+import com.moviePicker.api.member.exception.NotNicknameMatchException;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +21,7 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity(name = "members")
 @Getter
@@ -131,6 +134,11 @@ public class Member extends TimestampEntity implements UserDetails {
         changeMember();
     }
 
+    public void ChangePasswordNickname(MemberUpdateRequest request) {
+        this.passwordHash=request.getPassword();
+        this.nickname=request.getNickname();
+    }
+
     public void updatePasswordResetToken(String passwordResetToken) {
         this.passwordResetToken = passwordResetToken;
         this.passwordResetTokenValidUntil = LocalDateTime.now().plusDays(1l);
@@ -149,6 +157,12 @@ public class Member extends TimestampEntity implements UserDetails {
     public void loginAndCheckExpelled() {
         if (this.isAccountNonExpired()) {
             throw new UnauthenticatedException("추방된 회원입니다.");
+        }
+    }
+
+    public void checkNickname(String nickname){
+        if(!this.nickname.equals(nickname)){
+            throw new NotNicknameMatchException("본인이 아닙니다");
         }
     }
 
