@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.test.context.ActiveProfiles;
 
-import static com.moviePicker.api.member.MemberDataLoader.*;
+import static com.moviePicker.api.auth.AuthAcceptanceDataLoader.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@ActiveProfiles("memberDataLoader")
+@ActiveProfiles("authAcceptanceDataLoader")
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 public class AuthAcceptanceTest extends AcceptanceTest {
 

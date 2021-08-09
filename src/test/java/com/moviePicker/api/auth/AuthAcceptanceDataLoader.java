@@ -1,4 +1,4 @@
-package com.moviePicker.api.member;
+package com.moviePicker.api.auth;
 
 import com.moviePicker.api.auth.infra.PasswordHashProvider;
 import com.moviePicker.api.member.domain.Member;
@@ -17,9 +17,9 @@ import static com.moviePicker.api.auth.AuthAcceptanceTest.authorizationToken;
 import static com.moviePicker.api.auth.AuthAcceptanceTest.passwordResetToken;
 
 @Component
-@Profile("memberDataLoader")
+@Profile("authAcceptanceDataLoader")
 @RequiredArgsConstructor
-public class MemberDataLoader implements CommandLineRunner {
+public class AuthAcceptanceDataLoader implements CommandLineRunner {
     private final MemberRepository memberRepository;
     private final PasswordHashProvider passwordHashProvider;
 

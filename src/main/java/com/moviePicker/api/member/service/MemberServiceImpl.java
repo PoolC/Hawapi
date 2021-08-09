@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -101,9 +102,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void checkIsLogin(Member member) {
-        if (member == null) {
-            throw new NoSuchElementException("로그인 해주세요");
-        }
+        Optional.ofNullable(member)
+                .orElseThrow(()->{
+                    throw new NoSuchElementException("로그인 해주세요");
+                });
     }
 
     private void checkPasswordMatches(String password, String passwordCheck) {
