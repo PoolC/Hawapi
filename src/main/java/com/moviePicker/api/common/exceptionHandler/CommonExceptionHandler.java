@@ -2,21 +2,35 @@ package com.moviePicker.api.common.exceptionHandler;
 
 import com.moviePicker.api.auth.exception.*;
 import com.moviePicker.api.common.exception.NotSameException;
+import com.moviePicker.api.member.exception.DuplicateMemberException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class CommonExceptionHandler {
+
+
     @ExceptionHandler({IllegalArgumentException.class, NotSameException.class})
     public ResponseEntity<Map<String, String>> BadRequestHandler(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonMap("message", e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> ValidationExceptionsHandler(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors()
+                .forEach(c -> errors.put(((FieldError) c).getField(), c.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(errors);
     }
 
     @ExceptionHandler({UnauthenticatedException.class, WrongPasswordException.class})
@@ -37,9 +51,10 @@ public class CommonExceptionHandler {
                 .body(Collections.singletonMap("message", e.getMessage()));
     }
 
-    @ExceptionHandler({ExpiredTokenException.class, WrongTokenException.class})
+    @ExceptionHandler({ExpiredTokenException.class, WrongTokenException.class, DuplicateMemberException.class})
     public ResponseEntity<Map<String, String>> conflictHandler(Exception e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap("message", e.getMessage()));
     }
+
 }

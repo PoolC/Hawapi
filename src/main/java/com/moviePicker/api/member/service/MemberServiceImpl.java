@@ -1,11 +1,14 @@
 package com.moviePicker.api.member.service;
 
+import com.moviePicker.api.auth.exception.UnauthorizedException;
 import com.moviePicker.api.auth.exception.WrongPasswordException;
 import com.moviePicker.api.auth.infra.PasswordHashProvider;
+import com.moviePicker.api.common.exception.NotSameException;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.member.domain.MemberRole;
 import com.moviePicker.api.member.domain.MemberRoles;
 import com.moviePicker.api.member.dto.MemberCreateRequest;
+import com.moviePicker.api.member.dto.MemberUpdateRequest;
 import com.moviePicker.api.member.exception.DuplicateMemberException;
 import com.moviePicker.api.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +45,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void create(MemberCreateRequest request) {
-        boolean hasDuplicate = memberRepository.existsByEmailOrNickname(request.getEmail(), request.getNickname());
-        if (hasDuplicate) {
-            throw new DuplicateMemberException("There are one or more duplicates of the following: email, NickName");
-
-        }
-
+        checkCreateRequestValid(request);
         memberRepository.save(
                 Member.builder()
                         .UUID(UUID.randomUUID().toString())
@@ -62,4 +62,102 @@ public class MemberServiceImpl implements MemberService {
 
         );
     }
+
+    @Override
+    public void update(Member member, MemberUpdateRequest request) {
+
+
+        checkUpdateRequestValid(member, request);
+
+        String encodePassword = passwordHashProvider.encodePassword(request.getPassword());
+        member.updateMemberInfo(request, encodePassword);
+        memberRepository.saveAndFlush(member);
+
+    }
+
+    @Override
+    public void withdraw(Member member, String nickname) {
+
+        checkWithdrawRequestValid(member, nickname);
+        member.getRoles().changeRole(MemberRole.WITHDRAWAL);
+    }
+
+
+    private void checkCreateRequestValid(MemberCreateRequest request) {
+        checkDuplicateMember(request.getEmail(), request.getNickname());
+        checkPasswordMatches(request.getPassword(), request.getPasswordCheck());
+    }
+
+    private void checkUpdateRequestValid(Member member, MemberUpdateRequest request) {
+        checkIsLogin(member);
+        checkDuplicateNickname(request.getNickname());
+        checkPasswordMatches(request.getPassword(), request.getPasswordCheck());
+    }
+
+    private void checkWithdrawRequestValid(Member member, String nickname) {
+        checkIsLogin(member);
+        checkNicknameFormat(nickname);
+        checkNicknameMatches(member, nickname);
+    }
+
+    private void checkIsLogin(Member member) {
+        if (member == null) {
+            throw new NoSuchElementException("로그인 해주세요");
+        }
+    }
+
+    private void checkPasswordMatches(String password, String passwordCheck) {
+        if (!password.equals(passwordCheck)) {
+            throw new NotSameException("비밀번호와 비밀번호 체크가 일치하지 않습니다.");
+        }
+    }
+
+    private void checkDuplicateMember(String email, String nickname) {
+        checkDuplicateEmail(email);
+        checkDuplicateNickname(nickname);
+    }
+
+    private void checkDuplicateEmail(String email) {
+        if (checkEmailExist(email)) {
+            throw new DuplicateMemberException("이미 가입한 이메일입니다.");
+        }
+
+    }
+
+    private void checkDuplicateNickname(String nickname) {
+        if (checkNicknameExist(nickname)) {
+            throw new DuplicateMemberException("중복된 닉네임입니다.");
+        }
+    }
+
+
+    public boolean checkEmailExist(String email) {
+
+        if (memberRepository.existsByEmail(email)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkNicknameExist(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            return true;
+        }
+        return false;
+    }
+
+    private void checkNicknameFormat(String nickname) {
+        Pattern pattern = Pattern.compile("^[가-힣]*$");
+        Matcher matcher = pattern.matcher(nickname);
+        if (!matcher.find()) {
+            throw new IllegalArgumentException("잘못된 요청(닉네임형식)입니다.");
+        }
+    }
+
+    private void checkNicknameMatches(Member member, String nickname) {
+        if (!member.getNickname().equals(nickname)) {
+            throw new UnauthorizedException("잘못된 요청(닉네임불일치)입니다.");
+        }
+    }
+
 }

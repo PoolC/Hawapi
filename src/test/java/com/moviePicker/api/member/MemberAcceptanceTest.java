@@ -11,11 +11,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
 import static com.moviePicker.api.auth.AuthAcceptanceTest.authorizedLogin;
 import static com.moviePicker.api.auth.AuthAcceptanceTest.unauthorizedLogin;
-import static com.moviePicker.api.member.MemberDataLoader.*;
+import static com.moviePicker.api.member.MemberDataLoader.authorizedEmail;
+import static com.moviePicker.api.member.MemberDataLoader.authorizedNickname;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -27,11 +29,11 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
     public static String
 
-            name = "moviePicker", emptyName = "",
-            nickname = "딸기성하", emptyNickName = "", wrongFormatNickname = "asdf",
+            name = "마르케즈", emptyName = "",
+            nickname = "닉네임", emptyNickName = "", wrongFormatNickname = "asdf",
             password = "password123!", emptyPassword = "", wrongPassword = "wrongPassword", wrongFormatPassword = "aaa11",
             passwordCheck = "password123!", wrongPasswordCheck = "asdfsd23@",
-            email = "anfro2520@gmail.com", emptyEmail = "", wrongFormatEmail = "strawberrySungha.com@naver";
+            email = "sodapop95@gmail.com", emptyEmail = "", wrongFormatEmail = "strawberrySungha.@naver";
 
 
     @Test
@@ -78,7 +80,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
     @Test
     @DisplayName("테스트 03: 회원가입 실패 400: 잘못된 형식으로 보낼때")
-    public void 회원가입_실패_BAD_REQUEST_3() {
+    public void 회원가입_실패_BAD_REQUEST_3() throws Exception {
 
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
@@ -139,8 +141,8 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
 
     @Test
-    @DisplayName("테스트 07: 회원가입 성공 200")
-    public void 회원가입_성공_OK() {
+    @DisplayName("테스트 07: 회원가입 성공 202")
+    public void 회원가입_성공_ACCEPTED() {
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
                 .nickname(nickname)
@@ -154,7 +156,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = memberCreateRequest(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(OK.value());
+        assertThat(response.statusCode()).isEqualTo(ACCEPTED.value());
     }
 
     @Test
@@ -163,7 +165,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = "";
         MemberUpdateRequest request = MemberUpdateRequest.builder()
-                .email(authorizedEmail)
+
                 .nickname(nickname)
                 .password(password)
                 .passwordCheck(passwordCheck)
@@ -184,7 +186,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = authorizedLogin();
         MemberUpdateRequest request = MemberUpdateRequest.builder()
-                .email(authorizedEmail)
+
                 .nickname(nickname)
                 .password(wrongFormatPassword)
                 .passwordCheck(passwordCheck)
@@ -204,7 +206,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = authorizedLogin();
         MemberUpdateRequest request = MemberUpdateRequest.builder()
-                .email(authorizedEmail)
+
                 .nickname(authorizedNickname)
                 .password(password)
                 .passwordCheck(passwordCheck)
@@ -223,8 +225,8 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = authorizedLogin();
         MemberUpdateRequest request = MemberUpdateRequest.builder()
-                .email(authorizedEmail)
-                .nickname(nickname)
+
+                .nickname("닉넴")
                 .password(password)
                 .passwordCheck(passwordCheck)
                 .build();
@@ -257,7 +259,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = authorizedLogin();
         // when
-        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, wrongFormatNickname);
+        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, "asdf");
         // then
         assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
 
@@ -269,7 +271,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = authorizedLogin();
         // when
-        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, existingName);
+        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, "닉넴");
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
 
@@ -292,6 +294,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .body(request)
                 .contentType(APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().put("/members/me")
                 .then().log().all()
                 .extract();

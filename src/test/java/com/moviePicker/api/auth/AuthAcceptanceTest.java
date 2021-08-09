@@ -33,7 +33,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .email(unauthorizedEmail)
                 .password(wrongPassword)
                 .build();
-        System.out.println("request = " + request.getEmail());
+        
         //when
         ExtractableResponse<Response> response = loginRequest(request);
 

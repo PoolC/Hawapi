@@ -36,7 +36,7 @@ public class MemberDataLoader implements CommandLineRunner {
 
     password = "password123!",
             resetPassword = "resetPassword123!", wrongPassword = "wrongPassword",
-            existingName = "name", authorizedNickname = "nickname", adminNickName = "admin";
+            authorizedName = "name", authorizedNickname = "권한닉네임", adminNickName = "admin";
 
 
     @Override

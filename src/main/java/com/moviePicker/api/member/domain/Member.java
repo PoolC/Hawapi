@@ -7,6 +7,7 @@ import com.moviePicker.api.auth.exception.UnauthenticatedException;
 import com.moviePicker.api.auth.exception.UnauthorizedException;
 import com.moviePicker.api.auth.exception.WrongTokenException;
 import com.moviePicker.api.common.domain.TimestampEntity;
+import com.moviePicker.api.member.dto.MemberUpdateRequest;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -176,6 +177,12 @@ public class Member extends TimestampEntity implements UserDetails {
         this.roles.changeRole(MemberRole.MEMBER);
         this.authorizationToken = null;
         this.authorizationTokenValidUntil = null;
+    }
+
+    
+    public void updateMemberInfo(MemberUpdateRequest request, String passwordHash) {
+        this.passwordHash = passwordHash;
+        this.nickname = request.getNickname();
     }
 
     private void updatePassword(PasswordResetRequest request) {
