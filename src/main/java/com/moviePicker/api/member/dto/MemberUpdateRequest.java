@@ -19,8 +19,7 @@ public class MemberUpdateRequest {
 
     @Pattern(regexp = "^[가-힣]*$", message = "닉네임은 한글만 가능합니다.")
     private final String nickname;
-
-
+    
     @JsonCreator
     @Builder
     public MemberUpdateRequest(

@@ -124,7 +124,7 @@ public class Member extends TimestampEntity implements UserDetails {
 
     public void updateAuthorizationToken(String authorizationToken) {
         this.authorizationToken = authorizationToken;
-        this.authorizationTokenValidUntil = LocalDateTime.now().plusDays(1l);
+        this.authorizationTokenValidUntil = LocalDateTime.now().plusDays(1L);
     }
 
     public void checkAuthorizationTokenAndChangeMemberRole(String authorizationToken) {
@@ -134,7 +134,7 @@ public class Member extends TimestampEntity implements UserDetails {
 
     public void updatePasswordResetToken(String passwordResetToken) {
         this.passwordResetToken = passwordResetToken;
-        this.passwordResetTokenValidUntil = LocalDateTime.now().plusDays(1l);
+        this.passwordResetTokenValidUntil = LocalDateTime.now().plusDays(1L);
     }
 
     public void checkPasswordResetTokenAndUpdatePassword(String passwordResetToken, PasswordResetRequest request) {
@@ -151,6 +151,15 @@ public class Member extends TimestampEntity implements UserDetails {
         if (this.isAccountNonExpired()) {
             throw new UnauthenticatedException("추방된 회원입니다.");
         }
+    }
+
+    public void updateMemberInfo(MemberUpdateRequest request, String passwordHash) {
+        this.passwordHash = passwordHash;
+        this.nickname = request.getNickname();
+    }
+
+    public void withdraw() {
+        this.getRoles().changeRole(MemberRole.WITHDRAWAL);
     }
 
     private void checkAuthorizationToken(String authorizationToken) {
@@ -179,13 +188,9 @@ public class Member extends TimestampEntity implements UserDetails {
         this.authorizationTokenValidUntil = null;
     }
 
-    
-    public void updateMemberInfo(MemberUpdateRequest request, String passwordHash) {
-        this.passwordHash = passwordHash;
-        this.nickname = request.getNickname();
-    }
-
     private void updatePassword(PasswordResetRequest request) {
         this.passwordHash = request.getPassword();
     }
+
+
 }

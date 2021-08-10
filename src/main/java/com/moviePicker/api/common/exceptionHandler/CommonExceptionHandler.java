@@ -16,14 +16,27 @@ import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class CommonExceptionHandler {
+
     @ExceptionHandler({IllegalArgumentException.class, NotSameException.class, MethodArgumentNotValidException.class})
     public ResponseEntity<Map<String, String>> BadRequestHandler(Exception e) {
         Map<String, String> errors = new HashMap<>();
         errors.put("message", e.getMessage());
+
         checkMethodArgumentNotValidException(e, errors);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(errors);
+    }
+
+    private void checkMethodArgumentNotValidException(Exception e, Map<String, String> errors) {
+        if (e instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
+            errors.clear();
+            StringBuilder sb = new StringBuilder();
+            ex.getBindingResult().getAllErrors()
+                    .forEach(c -> sb.append(c.getDefaultMessage()).append(". "));
+            errors.put("message", sb.toString());
+        }
     }
 
     @ExceptionHandler({UnauthenticatedException.class, WrongPasswordException.class})
@@ -50,14 +63,4 @@ public class CommonExceptionHandler {
                 .body(Collections.singletonMap("message", e.getMessage()));
     }
 
-    private void checkMethodArgumentNotValidException(Exception e, Map<String, String> errors) {
-        if (e instanceof MethodArgumentNotValidException) {
-            MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
-            errors.clear();
-            StringBuilder sb = new StringBuilder();
-            ex.getBindingResult().getAllErrors()
-                    .forEach(c -> sb.append(c.getDefaultMessage() + ". "));
-            errors.put("message", sb.toString());
-        }
-    }
 }

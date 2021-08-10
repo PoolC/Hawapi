@@ -27,8 +27,7 @@ public class MemberController {
     public ResponseEntity<Boolean> isNicknameDuplicated(@PathVariable String nickname) {
         return ResponseEntity.ok(memberService.checkNicknameExist(nickname));
     }
-
-
+    
     @PostMapping
     public ResponseEntity<Void> memberCreate(@RequestBody @Valid MemberCreateRequest request) {
 
