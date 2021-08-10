@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 public class CommonExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class, NotSameException.class, MethodArgumentNotValidException.class})
-    public ResponseEntity<Map<String, String>> BadRequestHandler(Exception e) {
+    public ResponseEntity<Map<String, String>> badRequestHandler(Exception e) {
         Map<String, String> errors = new HashMap<>();
         errors.put("message", e.getMessage());
 

@@ -162,6 +162,12 @@ public class Member extends TimestampEntity implements UserDetails {
         this.getRoles().changeRole(MemberRole.WITHDRAWAL);
     }
 
+    public void checkNicknameMatches(String nickname){
+        if (!this.nickname.equals(nickname)) {
+            throw new UnauthorizedException("잘못된 요청(닉네임불일치)입니다.");
+        }
+    }
+
     private void checkAuthorizationToken(String authorizationToken) {
         checkTokenExpired(this.authorizationTokenValidUntil);
         checkTokenCorrect(this.authorizationToken, authorizationToken);

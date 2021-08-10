@@ -71,7 +71,6 @@ public class MemberService {
         String encodePassword = passwordHashProvider.encodePassword(request.getPassword());
         member.updateMemberInfo(request, encodePassword);
         memberRepository.saveAndFlush(member);
-
     }
 
     public void withdraw(Member member, String nickname) {
@@ -82,13 +81,13 @@ public class MemberService {
     private void checkCreateRequestValid(MemberCreateRequest request) {
         checkDuplicateEmail(request.getEmail());
         checkDuplicateNickname(request.getNickname());
-        checkPasswordMatches(request.getPassword(), request.getPasswordCheck());
+        request.checkPasswordMatches();
     }
 
     private void checkUpdateRequestValid(Member member, MemberUpdateRequest request) {
         checkIsLogin(member);
         checkDuplicateNickname(request.getNickname());
-        checkPasswordMatches(request.getPassword(), request.getPasswordCheck());
+        request.checkPasswordMatches();
     }
 
     private void checkWithdrawRequestValid(Member member, String nickname) {
@@ -104,20 +103,14 @@ public class MemberService {
                 });
     }
 
-    private void checkPasswordMatches(String password, String passwordCheck) {
-        if (!password.equals(passwordCheck)) {
-            throw new NotSameException("비밀번호와 비밀번호 체크가 일치하지 않습니다.");
-        }
-    }
-
     private void checkDuplicateEmail(String email) {
-        if (checkEmailExist(email)) {
+        if (memberRepository.existsByEmail(email)) {
             throw new DuplicateMemberException("이미 가입한 이메일입니다.");
         }
     }
 
     private void checkDuplicateNickname(String nickname) {
-        if (checkNicknameExist(nickname)) {
+        if (memberRepository.existsByNickname(nickname)) {
             throw new DuplicateMemberException("중복된 닉네임입니다.");
         }
     }
@@ -131,8 +124,6 @@ public class MemberService {
     }
 
     private void checkNicknameMatches(Member member, String nickname) {
-        if (!member.getNickname().equals(nickname)) {
-            throw new UnauthorizedException("잘못된 요청(닉네임불일치)입니다.");
-        }
+        member.checkNicknameMatches(nickname);
     }
 }
