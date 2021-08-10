@@ -25,7 +25,6 @@ public enum MemberRole implements Role {
         public List<MemberRole> getRequiredRoles() {
             return Collections.singletonList(MemberRole.MEMBER);
         }
-
     },
     MEMBER {
         @Override
@@ -49,7 +48,6 @@ public enum MemberRole implements Role {
         public String getDescription() {
             return "자진탈퇴회원";
         }
-
     },
     EXPELLED {
         @Override
@@ -63,6 +61,4 @@ public enum MemberRole implements Role {
             return "외부인";
         }
     }
-
-
 }

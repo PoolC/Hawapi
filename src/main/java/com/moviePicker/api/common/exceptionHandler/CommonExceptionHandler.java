@@ -28,17 +28,6 @@ public class CommonExceptionHandler {
                 .body(errors);
     }
 
-    private void checkMethodArgumentNotValidException(Exception e, Map<String, String> errors) {
-        if (e instanceof MethodArgumentNotValidException) {
-            MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
-            errors.clear();
-            StringBuilder sb = new StringBuilder();
-            ex.getBindingResult().getAllErrors()
-                    .forEach(c -> sb.append(c.getDefaultMessage()).append(". "));
-            errors.put("message", sb.toString());
-        }
-    }
-
     @ExceptionHandler({UnauthenticatedException.class, WrongPasswordException.class})
     public ResponseEntity<Map<String, String>> unauthorizedHandler(Exception e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -61,6 +50,17 @@ public class CommonExceptionHandler {
     public ResponseEntity<Map<String, String>> conflictHandler(Exception e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap("message", e.getMessage()));
+    }
+
+    private void checkMethodArgumentNotValidException(Exception e, Map<String, String> errors) {
+        if (e instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
+            errors.clear();
+            StringBuilder sb = new StringBuilder();
+            ex.getBindingResult().getAllErrors()
+                    .forEach(c -> sb.append(c.getDefaultMessage()).append(". "));
+            errors.put("message", sb.toString());
+        }
     }
 
 }

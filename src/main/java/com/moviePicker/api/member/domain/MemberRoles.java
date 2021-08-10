@@ -30,10 +30,8 @@ public class MemberRoles {
 
     public static MemberRoles getDefaultFor(MemberRole role) {
         Set<MemberRole> returnRoles = new HashSet<>();
-
         returnRoles.add(role);
         returnRoles.addAll(role.getRequiredRoles());
-
         return new MemberRoles(returnRoles);
     }
 
@@ -86,7 +84,6 @@ public class MemberRoles {
     private void checkIsMemberButHasNonMemberRole() {
         if (!roles.contains(MemberRole.MEMBER))
             return;
-
         roles.stream()
                 .filter(not(MemberRole::isMember))
                 .findAny()
@@ -98,7 +95,6 @@ public class MemberRoles {
     private void checkIsSpecialRoleButDoesNotHaveMemberRole() {
         if (roles.contains(MemberRole.MEMBER))
             return;
-
         roles.stream()
                 .filter(not(MemberRole.MEMBER::equals))
                 .filter(MemberRole::isMember)

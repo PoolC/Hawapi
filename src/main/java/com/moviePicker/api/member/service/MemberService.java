@@ -27,7 +27,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordHashProvider passwordHashProvider;
 
-
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() ->
@@ -111,12 +110,10 @@ public class MemberService {
         }
     }
 
-
     private void checkDuplicateEmail(String email) {
         if (checkEmailExist(email)) {
             throw new DuplicateMemberException("이미 가입한 이메일입니다.");
         }
-
     }
 
     private void checkDuplicateNickname(String nickname) {
@@ -138,5 +135,4 @@ public class MemberService {
             throw new UnauthorizedException("잘못된 요청(닉네임불일치)입니다.");
         }
     }
-
 }
