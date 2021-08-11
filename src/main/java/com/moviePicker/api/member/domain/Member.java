@@ -7,6 +7,7 @@ import com.moviePicker.api.auth.exception.UnauthenticatedException;
 import com.moviePicker.api.auth.exception.UnauthorizedException;
 import com.moviePicker.api.auth.exception.WrongTokenException;
 import com.moviePicker.api.common.domain.TimestampEntity;
+import com.moviePicker.api.member.dto.MemberUpdateRequest;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -123,7 +124,7 @@ public class Member extends TimestampEntity implements UserDetails {
 
     public void updateAuthorizationToken(String authorizationToken) {
         this.authorizationToken = authorizationToken;
-        this.authorizationTokenValidUntil = LocalDateTime.now().plusDays(1l);
+        this.authorizationTokenValidUntil = LocalDateTime.now().plusDays(1L);
     }
 
     public void checkAuthorizationTokenAndChangeMemberRole(String authorizationToken) {
@@ -133,7 +134,7 @@ public class Member extends TimestampEntity implements UserDetails {
 
     public void updatePasswordResetToken(String passwordResetToken) {
         this.passwordResetToken = passwordResetToken;
-        this.passwordResetTokenValidUntil = LocalDateTime.now().plusDays(1l);
+        this.passwordResetTokenValidUntil = LocalDateTime.now().plusDays(1L);
     }
 
     public void checkPasswordResetTokenAndUpdatePassword(String passwordResetToken, PasswordResetRequest request) {
@@ -149,6 +150,21 @@ public class Member extends TimestampEntity implements UserDetails {
     public void loginAndCheckExpelled() {
         if (this.isAccountNonExpired()) {
             throw new UnauthenticatedException("추방된 회원입니다.");
+        }
+    }
+
+    public void updateMemberInfo(MemberUpdateRequest request, String passwordHash) {
+        this.passwordHash = passwordHash;
+        this.nickname = request.getNickname();
+    }
+
+    public void withdraw() {
+        this.getRoles().changeRole(MemberRole.WITHDRAWAL);
+    }
+
+    public void checkNicknameMatches(String nickname){
+        if (!this.nickname.equals(nickname)) {
+            throw new UnauthorizedException("잘못된 요청(닉네임불일치)입니다.");
         }
     }
 
@@ -181,4 +197,6 @@ public class Member extends TimestampEntity implements UserDetails {
     private void updatePassword(PasswordResetRequest request) {
         this.passwordHash = request.getPassword();
     }
+
+
 }

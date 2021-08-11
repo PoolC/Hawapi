@@ -1,6 +1,7 @@
 package com.moviePicker.api.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.moviePicker.api.common.exception.NotSameException;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,13 +10,18 @@ import java.util.Optional;
 
 @Getter
 public class PasswordResetRequest {
+
     private final String email;
+
     private final String password;
+    
     private final String passwordCheck;
 
     @JsonCreator
     @Builder
-    public PasswordResetRequest(String email, String password, String passwordCheck) {
+    public PasswordResetRequest(@JsonProperty("email") String email,
+                                @JsonProperty("password") String password,
+                                @JsonProperty("passwordCheck") String passwordCheck) {
         this.email = email;
         this.password = password;
         this.passwordCheck = passwordCheck;
