@@ -23,6 +23,15 @@ public class Review {
     @Column(name="id")
     private Long id;
 
+    @Column(name = "report_count")
+    private int report_count;
+
+    @Column(name = "recommendation_count")
+    private int recommendation_count;
+
+    @Column(name="content", columnDefinition = "LONGTEXT")
+    private String content;
+
     @ManyToOne(fetch= LAZY)
     @JoinColumn(name = "member_id", nullable = false, referencedColumnName="id")
     private Member member;
@@ -32,21 +41,12 @@ public class Review {
     private Movie movie;
 
     @OneToMany(mappedBy="review")
-    List<Comment> commentList=new ArrayList<>();
+    List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy="review")
-    List<ReviewRecommendMember> reviewRecommendMemberList=new ArrayList<>();
+    List<ReviewRecommendMember> reviewRecommendMemberList = new ArrayList<>();
 
     @OneToMany(mappedBy="review")
-    List<ReviewReportMember> reviewReportMemberList=new ArrayList<>();
-
-    @Column(name = "report_count")
-    private int report_count;
-
-    @Column(name = "recommendation_count")
-    private int recommendation_count;
-
-    @Column(name="content", columnDefinition = "LONGTEXT")
-    private String content;
+    List<ReviewReportMember> reviewReportMemberList = new ArrayList<>();
 
 }

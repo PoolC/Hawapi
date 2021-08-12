@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
 
-@Entity(name="comments")
+@Entity(name="comment")
 @Getter
 public class Comment {
 
@@ -17,6 +17,9 @@ public class Comment {
     @GeneratedValue
     @Column(name="id")
     private Long id;
+
+    @Column(name="content")
+    private String content;
 
     @ManyToOne(fetch= LAZY)
     @JoinColumn(name = "review_id", nullable = false, referencedColumnName="id")

@@ -18,9 +18,6 @@ public class Movie {
     @Column(name="id")
     private Long id;
 
-    @OneToMany(mappedBy = "movie")
-    List<Review> reviewList=new ArrayList<>();
-
     @Column(name="title", columnDefinition = "LONGTEXT")
     private String title;
 
@@ -31,9 +28,12 @@ public class Movie {
     private String image_url;
 
     @OneToMany(mappedBy = "movie")
-    List<MovieWatchMember> movieWatchMemberList=new ArrayList<>();
+    List<Review> reviewList = new ArrayList<>();
 
     @OneToMany(mappedBy = "movie")
-    List<MovieWishMember> movieWishMemberList=new ArrayList<>();
+    List<MovieWatchMember> movieWatchMemberList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie")
+    List<MovieWishMember> movieWishMemberList = new ArrayList<>();
 
 }
