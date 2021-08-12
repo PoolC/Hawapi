@@ -8,17 +8,21 @@ import com.moviePicker.api.auth.exception.UnauthorizedException;
 import com.moviePicker.api.auth.exception.WrongTokenException;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.dto.MemberUpdateRequest;
+import com.moviePicker.api.movieWatchMember.domain.MovieWatchMember;
+import com.moviePicker.api.movieWishMember.domain.MovieWishMember;
+import com.moviePicker.api.review.domain.Review;
+import com.moviePicker.api.reviewRecommendMember.domain.ReviewRecommendMember;
+import com.moviePicker.api.reviewReportMember.domain.ReviewReportMember;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "members")
@@ -53,11 +57,31 @@ public class Member extends TimestampEntity implements UserDetails {
     @Column(name = "report_count")
     private int reportCount = 0;
 
+    @OneToMany(mappedBy = "member")
+    List<Review> reviewList=new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    List<Review> commentList=new ArrayList<>();
+
+    @OneToMany(mappedBy="member")
+    List<ReviewRecommendMember> reviewRecommendMemberList=new ArrayList<>();
+
+    @OneToMany(mappedBy="member")
+    List<ReviewReportMember> reviewReportMemberList=new ArrayList<>();
+
+    @OneToMany(mappedBy="member")
+    List<MovieWatchMember> MovieWatchMemberList=new ArrayList<>();
+
+    @OneToMany(mappedBy="member")
+    List<MovieWishMember> MovieWishMemberList=new ArrayList<>();
+
     @Embedded
     private MemberRoles roles;
 
     protected Member() {
     }
+
+
 
     @Builder
     public Member(String UUID, String email, String nickname, String passwordHash, String passwordResetToken, LocalDateTime passwordResetTokenValidUntil, String authorizationToken, LocalDateTime authorizationTokenValidUntil, int reportCount, MemberRoles roles) {
