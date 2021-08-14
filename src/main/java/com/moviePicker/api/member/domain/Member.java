@@ -1,6 +1,10 @@
 package com.moviePicker.api.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.moviePicker.api.MovieWatched.domain.MovieWatched;
+import com.moviePicker.api.MovieWished.domain.MovieWished;
+import com.moviePicker.api.ReviewRecommended.domain.ReviewRecommended;
+import com.moviePicker.api.ReviewReported.domain.ReviewReported;
 import com.moviePicker.api.auth.dto.PasswordResetRequest;
 import com.moviePicker.api.auth.exception.ExpiredTokenException;
 import com.moviePicker.api.auth.exception.UnauthenticatedException;
@@ -8,11 +12,7 @@ import com.moviePicker.api.auth.exception.UnauthorizedException;
 import com.moviePicker.api.auth.exception.WrongTokenException;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.dto.MemberUpdateRequest;
-import com.moviePicker.api.movieWatchMember.domain.MovieWatchMember;
-import com.moviePicker.api.movieWishMember.domain.MovieWishMember;
 import com.moviePicker.api.review.domain.Review;
-import com.moviePicker.api.reviewRecommendMember.domain.ReviewRecommendMember;
-import com.moviePicker.api.reviewReportMember.domain.ReviewReportMember;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -58,29 +58,29 @@ public class Member extends TimestampEntity implements UserDetails {
     private int reportCount = 0;
 
     @OneToMany(mappedBy = "member")
-    List<Review> reviewList=new ArrayList<>();
+    List<Review> reviewList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    List<Review> commentList=new ArrayList<>();
+    List<Review> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy="member")
-    List<ReviewRecommendMember> reviewRecommendMemberList=new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    List<ReviewRecommended> reviewRecommendedList = new ArrayList<>();
 
-    @OneToMany(mappedBy="member")
-    List<ReviewReportMember> reviewReportMemberList=new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    List<ReviewReported> reviewReportedList = new ArrayList<>();
 
-    @OneToMany(mappedBy="member")
-    List<MovieWatchMember> MovieWatchMemberList=new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    List<MovieWatched> movieWatchedList = new ArrayList<>();
 
-    @OneToMany(mappedBy="member")
-    List<MovieWishMember> MovieWishMemberList=new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    List<MovieWished> movieWishedList = new ArrayList<>();
 
+    
     @Embedded
     private MemberRoles roles;
 
     protected Member() {
     }
-
 
 
     @Builder
@@ -186,7 +186,7 @@ public class Member extends TimestampEntity implements UserDetails {
         this.getRoles().changeRole(MemberRole.WITHDRAWAL);
     }
 
-    public void checkNicknameMatches(String nickname){
+    public void checkNicknameMatches(String nickname) {
         if (!this.nickname.equals(nickname)) {
             throw new UnauthorizedException("잘못된 요청(닉네임불일치)입니다.");
         }

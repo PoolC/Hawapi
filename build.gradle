@@ -36,10 +36,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
+    implementation 'org.jsoup:jsoup:1.14.1'
+    implementation 'org.json:json:20190722'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '4.4'
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+
 
     compileOnly 'org.projectlombok:lombok'
 //    runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2'
+
 
     annotationProcessor 'org.projectlombok:lombok'
 
