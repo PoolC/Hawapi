@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 public class MovieCsvDto {
 
     @CsvBindByName
-    private Long id;
-
-    @CsvBindByName
     private String movieCode;
 
     @CsvBindByName

@@ -6,6 +6,8 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static org.modelmapper.config.Configuration.AccessLevel;
+
 @Configuration
 public class MovieMapperConfiguration {
 
@@ -16,9 +18,9 @@ public class MovieMapperConfiguration {
 
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)
-                .setMethodAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PROTECTED)
+                .setMethodAccessLevel(AccessLevel.PROTECTED)
                 .setFieldMatchingEnabled(true)
-                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+                .setFieldAccessLevel(AccessLevel.PRIVATE);
 
 
         return modelMapper;

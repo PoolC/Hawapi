@@ -5,7 +5,10 @@ import com.moviePicker.api.review.domain.Review;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +18,7 @@ import java.util.List;
 public class Movie extends TimestampEntity {
 
     @Id
-    @GeneratedValue
     @Column(name = "id")
-    private Long id;
-
-    @Column(name = "movie_code", columnDefinition = "LONGTEXT", nullable = false, unique = true)
     private String movieCode;
 
     @Column(name = "title", columnDefinition = "LONGTEXT")
@@ -68,9 +67,9 @@ public class Movie extends TimestampEntity {
     }
 
     @Builder
-    public Movie(Long id, String movieCode, String title, String subtitle, String score, String genre, String country, String runningTime, String pubDate, String plot,
+    public Movie(String movieCode, String title, String subtitle, String score, String genre, String country, String runningTime, String pubDate, String plot,
                  String filmRating, String director, String actors, String poster, String stillCuts, List<Review> reviewList) {
-        this.id = id;
+
         this.movieCode = movieCode;
         this.title = title;
         this.subtitle = subtitle;
@@ -91,7 +90,6 @@ public class Movie extends TimestampEntity {
     @Override
     public String toString() {
         return "Movie{" +
-                "id=" + id +
                 ", movieCode='" + movieCode + '\'' +
                 ", title='" + title + '\'' +
                 ", subtitle='" + subtitle + '\'' +
