@@ -1,6 +1,6 @@
-package com.moviePicker.api.MovieWatched.repository;
+package com.moviePicker.api.movieWatched.repository;
 
-import com.moviePicker.api.MovieWatched.domain.MovieWatched;
+import com.moviePicker.api.movieWatched.domain.MovieWatched;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

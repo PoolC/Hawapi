@@ -1,12 +1,13 @@
 package com.moviePicker.api.review.domain;
 
 
-import com.moviePicker.api.ReviewRecommended.domain.ReviewRecommended;
-import com.moviePicker.api.ReviewReported.domain.ReviewReported;
+import com.moviePicker.api.reviewRecommended.domain.ReviewRecommended;
+import com.moviePicker.api.reviewReported.domain.ReviewReported;
 import com.moviePicker.api.comment.domain.Comment;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.movie.domain.Movie;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -53,4 +54,21 @@ public class Review extends TimestampEntity {
     protected Review() {
     }
 
+    @Builder
+    public Review(Long id, int report_count, int recommendation_count, String content, Member member, Movie movie) {
+        this.id = id;
+        this.report_count = report_count;
+        this.recommendation_count = recommendation_count;
+        this.content = content;
+        this.member = member;
+        this.movie = movie;
+    }
+
+    public static void setMovie(Review review,Movie movie){
+        if(review.movie!=null){
+            review.movie.getReviewList().remove(review);
+        }
+        review.movie=movie;
+        movie.getReviewList().add(review);
+    }
 }

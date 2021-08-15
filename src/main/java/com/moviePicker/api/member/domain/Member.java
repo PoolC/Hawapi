@@ -1,10 +1,10 @@
 package com.moviePicker.api.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.moviePicker.api.MovieWatched.domain.MovieWatched;
-import com.moviePicker.api.MovieWished.domain.MovieWished;
-import com.moviePicker.api.ReviewRecommended.domain.ReviewRecommended;
-import com.moviePicker.api.ReviewReported.domain.ReviewReported;
+import com.moviePicker.api.movieWatched.domain.MovieWatched;
+import com.moviePicker.api.movieWished.domain.MovieWished;
+import com.moviePicker.api.reviewRecommended.domain.ReviewRecommended;
+import com.moviePicker.api.reviewReported.domain.ReviewReported;
 import com.moviePicker.api.auth.dto.PasswordResetRequest;
 import com.moviePicker.api.auth.exception.ExpiredTokenException;
 import com.moviePicker.api.auth.exception.UnauthenticatedException;

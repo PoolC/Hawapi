@@ -68,7 +68,7 @@ public class Movie extends TimestampEntity {
 
     @Builder
     public Movie(String movieCode, String title, String subtitle, String score, String genre, String country, String runningTime, String pubDate, String plot,
-                 String filmRating, String director, String actors, String poster, String stillCuts, List<Review> reviewList) {
+                 String filmRating, String director, String actors, String poster, String stillCuts) {
 
         this.movieCode = movieCode;
         this.title = title;
@@ -84,7 +84,6 @@ public class Movie extends TimestampEntity {
         this.actors = actors;
         this.poster = poster;
         this.stillCuts = stillCuts;
-        this.reviewList = reviewList;
     }
 
     @Override

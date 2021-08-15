@@ -1,4 +1,4 @@
-package com.moviePicker.api.MovieWatched.domain;
+package com.moviePicker.api.movieWatched.domain;
 
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;

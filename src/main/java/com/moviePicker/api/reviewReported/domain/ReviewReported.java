@@ -1,4 +1,4 @@
-package com.moviePicker.api.ReviewRecommended.domain;
+package com.moviePicker.api.reviewReported.domain;
 
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
@@ -9,9 +9,9 @@ import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
 
-@Entity(name = "recommend")
+@Entity(name = "report")
 @Getter
-public class ReviewRecommended extends TimestampEntity {
+public class ReviewReported extends TimestampEntity {
 
     @Id
     @GeneratedValue
@@ -26,7 +26,6 @@ public class ReviewRecommended extends TimestampEntity {
     @JoinColumn(name = "review_id", nullable = false, referencedColumnName = "id")
     private Review review;
 
-    protected ReviewRecommended() {
+    protected ReviewReported() {
     }
-
 }
