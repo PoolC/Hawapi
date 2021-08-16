@@ -20,11 +20,11 @@ public class MovieWished extends TimestampEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "members_id", nullable = false, referencedColumnName = "id")
-    Member member;
+    private Member member;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "movies_id", nullable = false, referencedColumnName = "id")
-    Movie movie;
+    private Movie movie;
 
     protected MovieWished() {
     }
@@ -32,6 +32,7 @@ public class MovieWished extends TimestampEntity {
     private MovieWished(Member member, Movie movie) {
         this.member = member;
         this.movie = movie;
+        member.getMovieWishedList().add(this);
     }
 
     public static MovieWished createMovieWished(Member member, Movie movie) {

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieCsvDto {
+public class CsvMovieData {
 
     @CsvBindByName
     private String movieCode;

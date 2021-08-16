@@ -1,12 +1,12 @@
 package com.moviePicker.api.review.domain;
 
 
-import com.moviePicker.api.reviewRecommended.domain.ReviewRecommended;
-import com.moviePicker.api.reviewReported.domain.ReviewReported;
 import com.moviePicker.api.comment.domain.Comment;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.movie.domain.Movie;
+import com.moviePicker.api.reviewRecommended.domain.ReviewRecommended;
+import com.moviePicker.api.reviewReported.domain.ReviewReported;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -35,11 +35,11 @@ public class Review extends TimestampEntity {
     private String content;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "movie_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "movie_id", referencedColumnName = "id")
     private Movie movie;
 
     @OneToMany(mappedBy = "review")
@@ -64,11 +64,20 @@ public class Review extends TimestampEntity {
         this.movie = movie;
     }
 
-    public static void setMovie(Review review,Movie movie){
-        if(review.movie!=null){
+    public static void setMember(Review review, Member member) {
+        if (review.member != null) {
+            review.member.getReviewList().remove(review);
+        }
+        review.member = member;
+        member.getReviewList().add(review);
+    }
+
+    public static void setMovie(Review review, Movie movie) {
+        if (review.movie != null) {
             review.movie.getReviewList().remove(review);
         }
-        review.movie=movie;
+        review.movie = movie;
         movie.getReviewList().add(review);
     }
+
 }

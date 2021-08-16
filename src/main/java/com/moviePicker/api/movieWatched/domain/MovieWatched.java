@@ -32,6 +32,7 @@ public class MovieWatched extends TimestampEntity {
     private MovieWatched(Member member, Movie movie) {
         this.member = member;
         this.movie = movie;
+        member.getMovieWatchedList().add(this);
     }
 
     public static MovieWatched createMovieWatched(Member member, Movie movie) {

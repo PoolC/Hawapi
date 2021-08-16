@@ -1,10 +1,6 @@
 package com.moviePicker.api.movie;
 
 
-import com.moviePicker.api.movieWatched.domain.MovieWatched;
-import com.moviePicker.api.movieWatched.repository.MovieWatchedRepository;
-import com.moviePicker.api.movieWished.domain.MovieWished;
-import com.moviePicker.api.movieWished.repository.MovieWishedRepository;
 import com.moviePicker.api.auth.infra.PasswordHashProvider;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.member.domain.MemberRole;
@@ -12,6 +8,10 @@ import com.moviePicker.api.member.domain.MemberRoles;
 import com.moviePicker.api.member.repository.MemberRepository;
 import com.moviePicker.api.movie.domain.Movie;
 import com.moviePicker.api.movie.repository.MovieRepository;
+import com.moviePicker.api.movieWatched.domain.MovieWatched;
+import com.moviePicker.api.movieWatched.repository.MovieWatchedRepository;
+import com.moviePicker.api.movieWished.domain.MovieWished;
+import com.moviePicker.api.movieWished.repository.MovieWishedRepository;
 import com.moviePicker.api.review.domain.Review;
 import com.moviePicker.api.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,31 +39,46 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
 
     private final static String testMovieDataFile = "data/sample.csv";
 
-    public final static String defaultEmail = "defaultEmail@gmail.com",
-            defaultNickname = "존재하는닉네임",
-            defaultPassword = "password123!",
-            specificMovieCode="specificMoviecode";
+    public final static String memberEmail = "defaultEmail@gmail.com",
+            memberNickname = "존재하는닉네임",
+            memberPassword = "password123!",
+            specificMovieCode = "specificMovieCode";
 
-    public final static Long specificReviewId=11L;
+    public final static Long specificReviewId = 1L;
 
-    public final List<String> boxOfficeMovieCode= new ArrayList<>();
-    public final List<Movie> wishMovies =new ArrayList<>();
-    public final List<Movie> watchMovies =new ArrayList<>();
-    public final List<MovieWished> movieWishedList=new ArrayList<>();
-    public final List<MovieWatched> movieWatchedList=new ArrayList<>();
+    public final static List<String> boxOfficeMovieCode = new ArrayList<>();
+    public final static List<Movie> wishMovies = new ArrayList<>();
+    public final static List<Movie> watchMovies = new ArrayList<>();
+    public final static List<MovieWished> movieWishedList = new ArrayList<>();
+    public final static List<MovieWatched> movieWatchedList = new ArrayList<>();
+
+    public final static Integer totalMoviesSize = 31;
+    public final static Integer sizeOfPage = 10;
+
+    public static Member defaultMember;
+    public static Movie specificMovie;
+    public static Review specificReview;
 
     @Override
     public void run(String... args) throws Exception {
 
-        generateBoxOfficeData();
+        generateDefaultMember();
 
-        generateSpecificMovieReviewData();
+        generateBoxOfficeMovies();
 
-        Member default_member=Member.builder()
+        generateSpecificMovieAndReview();
+
+        generateWishWatchMovie();
+
+
+    }
+
+    private void generateDefaultMember() {
+        defaultMember = Member.builder()
                 .UUID(UUID.randomUUID().toString())
-                .email(defaultEmail)
-                .nickname(defaultNickname)
-                .passwordHash(passwordHashProvider.encodePassword(defaultPassword))
+                .email(memberEmail)
+                .nickname(memberNickname)
+                .passwordHash(passwordHashProvider.encodePassword(memberPassword))
                 .passwordResetToken(null)
                 .passwordResetTokenValidUntil(null)
                 .authorizationToken(null)
@@ -72,60 +87,53 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
                 .roles(MemberRoles.getDefaultFor(MemberRole.MEMBER))
                 .build();
 
-        memberRepository.save(default_member);
-
-        generateWishWatchData(default_member);
-
-
-
-
-
-
-
-
+        memberRepository.save(defaultMember);
     }
 
-    private void generateSpecificMovieReviewData() {
-        Movie specificMovie=Movie.builder()
+    private void generateBoxOfficeMovies() {
+        for (int i = 0; i < totalMoviesSize; ++i) {
+            this.boxOfficeMovieCode.add("boxOfficeCode" + i);
+            movieRepository.save(Movie.builder()
+                    .movieCode("boxOfficeCode" + i)
+                    .build());
+        }
+    }
+
+    private void generateSpecificMovieAndReview() {
+        specificMovie = Movie.builder()
                 .movieCode(specificMovieCode)
                 .build();
-        Review specificReview = Review.builder()
+        specificReview = Review.builder()
                 .id(specificReviewId)
                 .build();
 
-        Review.setMovie(specificReview,specificMovie);
-
         movieRepository.save(specificMovie);
         reviewRepository.save(specificReview);
+
+        Review.setMovie(specificReview, specificMovie);
+        Review.setMember(specificReview, defaultMember);
+
+
     }
 
-    private void generateWishWatchData(Member default_member) {
-        for(int i=0;i<31;++i){
+    private void generateWishWatchMovie() {
+        for (int i = 0; i < totalMoviesSize; ++i) {
             wishMovies.add(Movie.builder()
-                .movieCode("wishMovieCode"+Integer.toString(i))
-                .build());
-            movieWishedList.add(MovieWished.createMovieWished(default_member,wishMovies.get(i)));
-        }
-        for(int i=0;i<31;++i){
-            watchMovies.add(Movie.builder()
-                    .movieCode("watchedMovieCode"+Integer.toString(i))
+                    .movieCode("wishMovieCode" + Integer.toString(i))
                     .build());
-            movieWatchedList.add(MovieWatched.createMovieWatched(default_member,watchMovies.get(i)));
+            movieWishedList.add(MovieWished.createMovieWished(defaultMember, wishMovies.get(i)));
         }
-        for(int i=0;i<31;++i){
+        for (int i = 0; i < totalMoviesSize; ++i) {
+            watchMovies.add(Movie.builder()
+                    .movieCode("watchedMovieCode" + Integer.toString(i))
+                    .build());
+            movieWatchedList.add(MovieWatched.createMovieWatched(defaultMember, watchMovies.get(i)));
+        }
+        for (int i = 0; i < totalMoviesSize; ++i) {
             movieRepository.save(wishMovies.get(i));
             movieRepository.save(watchMovies.get(i));
             movieWishedRepository.save(movieWishedList.get(i));
             movieWatchedRepository.save(movieWatchedList.get(i));
-        }
-    }
-
-    private void generateBoxOfficeData(){
-        for(int i=0;i<31;++i){
-            this.boxOfficeMovieCode.add("boxOfficeCode"+Integer.toString(i));
-            movieRepository.save(Movie.builder()
-                    .movieCode("boxOfficeCode"+Integer.toString(i))
-                    .build());
         }
     }
 

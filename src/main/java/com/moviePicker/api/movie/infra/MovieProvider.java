@@ -1,7 +1,7 @@
 package com.moviePicker.api.movie.infra;
 
 import com.moviePicker.api.movie.domain.Movie;
-import com.moviePicker.api.movie.dto.MovieCsvDto;
+import com.moviePicker.api.movie.dto.CsvMovieData;
 import com.moviePicker.api.movie.repository.MovieRepository;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -62,11 +62,11 @@ public class MovieProvider implements ApplicationRunner {
         try {
             Path path = Paths.get(resource.getURI());
 
-            List<MovieCsvDto> movieCsvDtoList = new CsvToBeanBuilder<MovieCsvDto>(new BufferedReader(new InputStreamReader(new FileInputStream(path.toString()), "EUC-KR")))
-                    .withType(MovieCsvDto.class)
+            List<CsvMovieData> csvMovieDataList = new CsvToBeanBuilder<CsvMovieData>(new BufferedReader(new InputStreamReader(new FileInputStream(path.toString()), "EUC-KR")))
+                    .withType(CsvMovieData.class)
                     .build()
                     .parse();
-            List<Movie> movieEntityList = movieCsvDtoList.stream()
+            List<Movie> movieEntityList = csvMovieDataList.stream()
                     .map(dto -> (movieMapper.map(dto, Movie.class)))
                     .collect(Collectors.toList());
             movieEntityList.forEach(movieRepository::save);
