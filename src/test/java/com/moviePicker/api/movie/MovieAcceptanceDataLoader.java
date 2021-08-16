@@ -36,7 +36,6 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
     private final ReviewRepository reviewRepository;
     private final PasswordHashProvider passwordHashProvider;
 
-
     private final static String testMovieDataFile = "data/sample.csv";
 
     public final static String defaultEmail = "defaultEmail@gmail.com",
@@ -46,7 +45,7 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
 
     public final static Long specificReviewId=11L;
 
-    public final List<String> boxOfficeMovieCode= new ArrayList<>();
+    public final static List<String> boxOfficeMovieCode= new ArrayList<>();
     public final List<Movie> wishMovies =new ArrayList<>();
     public final List<Movie> watchMovies =new ArrayList<>();
     public final List<MovieWished> movieWishedList=new ArrayList<>();
@@ -76,16 +75,10 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
 
         generateWishWatchData(default_member);
 
-
-
-
-
-
-
-
     }
 
     private void generateSpecificMovieReviewData() {
+
         Movie specificMovie=Movie.builder()
                 .movieCode(specificMovieCode)
                 .build();
@@ -94,12 +87,12 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
                 .build();
 
         Review.setMovie(specificReview,specificMovie);
-
         movieRepository.save(specificMovie);
         reviewRepository.save(specificReview);
     }
 
     private void generateWishWatchData(Member default_member) {
+
         for(int i=0;i<31;++i){
             wishMovies.add(Movie.builder()
                 .movieCode("wishMovieCode"+Integer.toString(i))
@@ -118,9 +111,11 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
             movieWishedRepository.save(movieWishedList.get(i));
             movieWatchedRepository.save(movieWatchedList.get(i));
         }
+
     }
 
     private void generateBoxOfficeData(){
+
         for(int i=0;i<31;++i){
             this.boxOfficeMovieCode.add("boxOfficeCode"+Integer.toString(i));
             movieRepository.save(Movie.builder()
@@ -128,6 +123,5 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
                     .build());
         }
     }
-
 
 }
