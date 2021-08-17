@@ -2,7 +2,7 @@ package com.moviePicker.api.movie.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.moviePicker.api.movie.domain.Movie;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -28,37 +28,22 @@ public class MovieResponse {
 
     @Builder
     @JsonCreator
-    public MovieResponse(
+    public MovieResponse(Movie movie) {
 
-            @JsonProperty("movieCode") String movieCode,
-            @JsonProperty("title") String title,
-            @JsonProperty("subtitle") String subtitle,
-            @JsonProperty("score") String score,
-            @JsonProperty("genre") String genre,
-            @JsonProperty("country") String country,
-            @JsonProperty("runningTime") String runningTime,
-            @JsonProperty("pubDate") String pubDate,
-            @JsonProperty("plot") String plot,
-            @JsonProperty("filmRating") String filmRating,
-            @JsonProperty("director") String director,
-            @JsonProperty("actors") String actors,
-            @JsonProperty("poster") String poster,
-            @JsonProperty("stillCuts") String stillCuts) {
-
-        this.movieCode = movieCode;
-        this.title = title;
-        this.subtitle = subtitle;
-        this.score = score;
-        this.genre = genre;
-        this.country = country;
-        this.runningTime = runningTime;
-        this.pubDate = pubDate;
-        this.plot = plot;
-        this.filmRating = filmRating;
-        this.director = director;
-        this.actors = actors;
-        this.poster = poster;
-        this.stillCuts = stillCuts;
+        this.movieCode = movie.getMovieCode();
+        this.title = movie.getTitle();
+        this.subtitle = movie.getSubtitle();
+        this.score = movie.getScore();
+        this.genre = movie.getGenre();
+        this.country = movie.getCountry();
+        this.runningTime = movie.getRunningTime();
+        this.pubDate = movie.getPubDate();
+        this.plot = movie.getPlot();
+        this.filmRating = movie.getFilmRating();
+        this.director = movie.getDirector();
+        this.actors = movie.getActors();
+        this.poster = movie.getPoster();
+        this.stillCuts = movie.getStillCuts();
     }
 
 

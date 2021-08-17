@@ -4,9 +4,7 @@ package com.moviePicker.api.movie;
 import com.moviePicker.api.AcceptanceTest;
 import com.moviePicker.api.auth.dto.LoginRequest;
 import com.moviePicker.api.auth.dto.LoginResponse;
-import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.member.repository.MemberRepository;
-import com.moviePicker.api.movie.domain.Movie;
 import com.moviePicker.api.movie.dto.MovieResponse;
 import com.moviePicker.api.movie.dto.MoviesResponse;
 import com.moviePicker.api.movie.dto.WishRegisterResponse;
@@ -167,7 +165,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = defaultLogin();
         int pageNumber = 1;
-        int sizeOfPage = 10;
+        int expectingSize = sizeOfPage;
 
         // when
         ExtractableResponse<Response> response = searchMoviesWished(accessToken, pageNumber);
@@ -176,7 +174,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
-        assertThat(responseBody.getMovies()).hasSize(sizeOfPage);
+        assertThat(responseBody.getMovies()).hasSize(expectingSize);
 
     }
 
@@ -219,7 +217,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = defaultLogin();
         int pageNumber = 1;
-        int sizeOfPage = 10;
+        int expectingSize = sizeOfPage;
 
         // when
         ExtractableResponse<Response> response = searchMoviesWished(accessToken, pageNumber);
@@ -228,7 +226,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
-        assertThat(responseBody.getMovies()).hasSize(sizeOfPage);
+        assertThat(responseBody.getMovies()).hasSize(expectingSize);
 
     }
 
@@ -337,9 +335,6 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         String accessToken = defaultLogin();
         String validMovieCode = specificMovieCode;
 
-        Member defaultMember = memberRepository.findByEmail(memberEmail).orElseThrow();
-        Movie specificMovie = movieRepository.findById(specificMovieCode).orElseThrow();
-
 
         //when
         ExtractableResponse<Response> response = registerWishMovie(accessToken, validMovieCode);
@@ -365,8 +360,6 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         String accessToken = defaultLogin();
         String validMovieCode = specificMovieCode;
 
-        Member defaultMember = memberRepository.findByEmail(memberEmail).orElseThrow();
-        Movie specificMovie = movieRepository.findById(specificMovieCode).orElseThrow();
 
         //when
         ExtractableResponse<Response> response = registerWishMovie(accessToken, validMovieCode);
@@ -419,9 +412,6 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         String accessToken = defaultLogin();
         String validMovieCode = specificMovieCode;
 
-        Member defaultMember = memberRepository.findByEmail(memberEmail).orElseThrow();
-        Movie specificMovie = movieRepository.findById(specificMovieCode).orElseThrow();
-
 
         //when
         ExtractableResponse<Response> response = registerWatchedMovie(accessToken, validMovieCode);
@@ -446,10 +436,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         //given
         String accessToken = defaultLogin();
         String validMovieCode = specificMovieCode;
-
-        Member defaultMember = memberRepository.findByEmail(memberEmail).orElseThrow();
-        Movie specificMovie = movieRepository.findById(specificMovieCode).orElseThrow();
-
+        
         //when
         ExtractableResponse<Response> response = registerWatchedMovie(accessToken, validMovieCode);
         WishRegisterResponse responseBody = response.as(WishRegisterResponse.class);
