@@ -2,12 +2,11 @@ package com.moviePicker.api.movie.service;
 
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.movie.domain.Movie;
-import com.moviePicker.api.movieWatched.domain.MovieWatched;
-import com.moviePicker.api.movieWished.domain.MovieWished;
+import com.moviePicker.api.movie.domain.MovieWatched;
+import com.moviePicker.api.movie.domain.MovieWished;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MovieService {
 

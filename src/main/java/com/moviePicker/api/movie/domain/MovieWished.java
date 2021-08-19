@@ -1,8 +1,7 @@
-package com.moviePicker.api.movieWished.domain;
+package com.moviePicker.api.movie.domain;
 
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
-import com.moviePicker.api.movie.domain.Movie;
 import lombok.Getter;
 
 import javax.persistence.*;

@@ -33,14 +33,13 @@ public class MovieController {
 
     private final MovieService movieService;
 
-    @GetMapping("/nowadays")
-    public ResponseEntity<MoviesResponse> moviesRunning(@PageableDefault Pageable pageable) {
-
-        List<MovieResponse> moviesRunning = movieService.searchMoviesRunning(pageable).stream()
-                .map(MovieResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(new MoviesResponse(moviesRunning));
-    }
+//    @GetMapping("/nowadays")
+//    public ResponseEntity<MoviesResponse> moviesRunning(@PageableDefault Pageable pageable) {
+//        List<MovieResponse> moviesRunning = movieService.searchMoviesRunning(pageable).stream()
+//                .map(MovieResponse::new)
+//                .collect(Collectors.toList());
+//        return ResponseEntity.ok().body(new MoviesResponse(moviesRunning));
+//    }
 
     @GetMapping("/search/{query}")
     public ResponseEntity<MoviesResponse> moviesByQuery(@PathVariable String query, @PageableDefault Pageable pageable) {

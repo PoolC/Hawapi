@@ -2,25 +2,16 @@ package com.moviePicker.api.movie.service;
 
 import com.moviePicker.api.auth.exception.UnauthenticatedException;
 import com.moviePicker.api.member.domain.Member;
-import com.moviePicker.api.member.repository.MemberRepository;
 import com.moviePicker.api.member.service.MemberService;
-import com.moviePicker.api.auth.exception.UnauthenticatedException;
-import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.movie.domain.Movie;
 import com.moviePicker.api.movie.repository.MovieRepository;
-import com.moviePicker.api.movieWatched.domain.MovieWatched;
-import com.moviePicker.api.movieWatched.repository.MovieWatchedRepository;
-import com.moviePicker.api.movieWished.domain.MovieWished;
-import com.moviePicker.api.movieWished.repository.MovieWishedRepository;
+import com.moviePicker.api.movie.domain.MovieWatched;
+import com.moviePicker.api.movie.repository.MovieWatchedRepository;
+import com.moviePicker.api.movie.domain.MovieWished;
+import com.moviePicker.api.movie.repository.MovieWishedRepository;
 import com.moviePicker.api.review.domain.Review;
 import com.moviePicker.api.review.repository.ReviewRepository;
-import com.moviePicker.api.movie.repository.MovieRepository;
-import com.moviePicker.api.movieWatched.domain.MovieWatched;
-import com.moviePicker.api.movieWatched.repository.MovieWatchedRepository;
-import com.moviePicker.api.movieWished.domain.MovieWished;
-import com.moviePicker.api.movieWished.repository.MovieWishedRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,10 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
-import static com.moviePicker.api.movie.infra.MovieProvider.boxOfficeMovieCodes;
 
 @Service
 @RequiredArgsConstructor
@@ -47,11 +34,12 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> searchMoviesRunning(Pageable pageable) {
 
-        Page<Movie> boxOfficeMovies = movieRepository.findAllByMovieCode(boxOfficeMovieCodes, pageable);
-        checkValidPageNumber(pageable.getPageNumber(), boxOfficeMovies.getTotalPages());
-
-
-        return boxOfficeMovies.getContent();
+//        Page<Movie> boxOfficeMovies = movieRepository.findAllByMovieCode(boxOfficeMovieCodes, pageable);
+//        checkValidPageNumber(pageable.getPageNumber(), boxOfficeMovies.getTotalPages());
+//
+//
+//        return boxOfficeMovies.getContent();
+        return null;
     }
 
     @Override

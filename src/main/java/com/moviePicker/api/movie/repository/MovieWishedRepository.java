@@ -1,8 +1,8 @@
-package com.moviePicker.api.movieWished.repository;
+package com.moviePicker.api.movie.repository;
 
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.movie.domain.Movie;
-import com.moviePicker.api.movieWished.domain.MovieWished;
+import com.moviePicker.api.movie.domain.MovieWished;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

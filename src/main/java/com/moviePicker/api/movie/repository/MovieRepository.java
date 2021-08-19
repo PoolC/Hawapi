@@ -15,8 +15,6 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
 
     Optional<Movie> findByMovieCode(String movieCode);
 
-    Page<Movie> findAllByMovieCode(Iterable<String> strings, Pageable pageable);
-
     Page<Movie> findByTitleContaining(String query, Pageable pageable);
 
     Page<Movie> findByTitleOrActorsContaining(String query, String query1, Pageable pageable);

@@ -1,8 +1,8 @@
 package com.moviePicker.api.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.moviePicker.api.movieWatched.domain.MovieWatched;
-import com.moviePicker.api.movieWished.domain.MovieWished;
+import com.moviePicker.api.movie.domain.MovieWatched;
+import com.moviePicker.api.movie.domain.MovieWished;
 import com.moviePicker.api.reviewRecommended.domain.ReviewRecommended;
 import com.moviePicker.api.reviewReported.domain.ReviewReported;
 import com.moviePicker.api.auth.dto.PasswordResetRequest;
