@@ -12,5 +12,7 @@ import java.util.Optional;
 @Repository
 public interface MovieWatchedRepository extends JpaRepository<MovieWatched, Long> {
 
-    Optional<MovieWished> findByMemberAndMovie(Member member, Movie movie);
+    Optional<MovieWatched> findByMemberAndMovie(Member member, Movie movie);
+
+    void removeByMemberAndMovie(Member member,Movie movie);
 }

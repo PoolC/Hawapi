@@ -13,4 +13,6 @@ public interface MovieWishedRepository extends JpaRepository<MovieWished, Long> 
 
 
     Optional<MovieWished> findByMemberAndMovie(Member member, Movie movie);
+
+    void removeByMemberAndMovie(Member member, Movie movie);
 }

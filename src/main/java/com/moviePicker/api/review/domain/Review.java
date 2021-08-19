@@ -9,6 +9,7 @@ import com.moviePicker.api.reviewRecommended.domain.ReviewRecommended;
 import com.moviePicker.api.reviewReported.domain.ReviewReported;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity(name = "reviews")
 @Getter
+@Setter
 public class Review extends TimestampEntity {
 
     @Id
@@ -64,6 +66,7 @@ public class Review extends TimestampEntity {
         this.movie = movie;
     }
 
+    //손봐야됨
     public static void setMember(Review review, Member member) {
         if (review.member != null) {
             review.member.getReviewList().remove(review);
