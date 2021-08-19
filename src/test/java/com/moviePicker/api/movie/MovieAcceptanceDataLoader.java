@@ -99,9 +99,11 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
         }
     }
 
+    @Transactional
     private void generateSpecificMovieAndReview() {
         specificMovie = Movie.builder()
                 .movieCode(specificMovieCode)
+                .title("specificMovie")
                 .build();
         specificReview = Review.builder()
                 .id(specificReviewId)
