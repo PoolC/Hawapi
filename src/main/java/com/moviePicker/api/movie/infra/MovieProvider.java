@@ -35,8 +35,9 @@ public class MovieProvider implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
+        readCsvAndSave("data/sample.csv");
         updateBoxOfficeData();
+
         List<Movie> movie = movieRepository.findAll();
         System.out.println("movie.size() = " + movie.size());
 

@@ -66,7 +66,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
     public void 현재_상영중인_영화목록조회_성공() throws Exception {
 
         //given
-        int validPageNumber = 1;
+        int validPageNumber = 0;
         int expectingSize = sizeOfPage;
         //when
         ExtractableResponse<Response> response = searchMoviesRunning(validPageNumber);
@@ -75,11 +75,13 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(OK.value());
         assertThat(responseBody.getMovies()).hasSize(expectingSize);
+        assertThat(responseBody.getMovies().get(0)).isEqualTo(boxOfficeMovieCode.get(0));
+
 
     }
 
     @Test
-    @DisplayName("테스트 03: 검색어로 영화목록조회 실패 400 : 검색어를 입력하지 않았을때")
+    @DisplayName("테스트 03: 검색어로 영화목록조회 실패 404 : 검색어를 입력하지 않았을때")
     public void 검색어로_영화목록조회_실패_BAD_REQUEST() throws Exception {
         //given
         String invalidQuery = "";
@@ -89,7 +91,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = searchMoviesByQuery(invalidQuery, validPageNumber);
 
         //then
-        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
     }
 
     @Test
@@ -97,7 +99,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
     public void 검색어로_영화목록조회_실패_NOT_FOUND() throws Exception {
 
         //given
-        String validQuery = "validQuery";
+        String validQuery = "specificMovie";
         int invalidPageNumber = 4;
 
         //when
@@ -113,8 +115,8 @@ public class MovieAcceptanceTest extends AcceptanceTest {
     public void 검색어로_영화목록조회_성공_OK() throws Exception {
 
         //given
-        String validQuery = "validQuery";
-        int validPageNumber = 1;
+        String validQuery = "specificMovie";
+        int validPageNumber = 0;
 
         //when
         ExtractableResponse<Response> response = searchMoviesByQuery(validQuery, validPageNumber);
@@ -436,7 +438,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         //given
         String accessToken = defaultLogin();
         String validMovieCode = specificMovieCode;
-        
+
         //when
         ExtractableResponse<Response> response = registerWatchedMovie(accessToken, validMovieCode);
         WishRegisterResponse responseBody = response.as(WishRegisterResponse.class);
@@ -455,7 +457,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(APPLICATION_JSON_VALUE)
-                .when().get("/movies/nowadays/{pageNumber}", pageNumber)
+                .when().get("/movies/nowadays?page={pageNumber}", pageNumber)
                 .then().log().all()
                 .extract();
     }
@@ -493,7 +495,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(APPLICATION_JSON_VALUE)
-                .when().get("/movies/nowadays/{movieId}", movieCode)
+                .when().get("/movies/{movieId}", movieCode)
                 .then().log().all()
                 .extract();
     }
@@ -502,7 +504,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(APPLICATION_JSON_VALUE)
-                .when().get("/movies/nowadays/{reviewId}", reviewId)
+                .when().get("/movies/{reviewId}", reviewId)
                 .then().log().all()
                 .extract();
     }

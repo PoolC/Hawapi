@@ -1,9 +1,8 @@
 package com.moviePicker.api.member.service;
 
-import com.moviePicker.api.auth.exception.UnauthorizedException;
+import com.moviePicker.api.auth.exception.UnauthenticatedException;
 import com.moviePicker.api.auth.exception.WrongPasswordException;
 import com.moviePicker.api.auth.infra.PasswordHashProvider;
-import com.moviePicker.api.common.exception.NotSameException;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.member.domain.MemberRole;
 import com.moviePicker.api.member.domain.MemberRoles;
@@ -99,7 +98,7 @@ public class MemberService {
     private void checkIsLogin(Member member) {
         Optional.ofNullable(member)
                 .orElseThrow(() -> {
-                    throw new NoSuchElementException("로그인 해주세요");
+                    throw new UnauthenticatedException("로그인 해주세요");
                 });
     }
 

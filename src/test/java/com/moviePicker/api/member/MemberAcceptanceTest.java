@@ -30,7 +30,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     public static String
 
             createName = "마르케즈", emptyName = "",
-            createNickname = "닉네임", emptyNickName = "", wrongFormatNickname = "asdf",changeNickname="변경된닉네임",notExistingNickname="가입되지않은닉네임",
+            createNickname = "닉네임", emptyNickName = "", wrongFormatNickname = "asdf", changeNickname = "변경된닉네임", notExistingNickname = "가입되지않은닉네임",
             createPassword = "password123!", emptyPassword = "", wrongFormatPassword = "aaa11",
             createPasswordCheck = "password123!", wrongPasswordCheck = "asdfsd23@",
             createEmail = "sodapop95@gmail.com", emptyEmail = "", wrongFormatEmail = "strawberrySungha.@naver";
@@ -161,7 +161,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
     @Test
     @DisplayName("테스트 08: 회원정보 수정 실패 403 : 로그인 안 할 시")
-    public void 회원정보_수정_실패_NOT_FOUND_1() {
+    public void 회원정보_수정_실패_UNAUTHORIZED_1() {
         // given
         String accessToken = "";
         MemberUpdateRequest request = MemberUpdateRequest.builder()
@@ -174,7 +174,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = memberUpdateRequest(accessToken, request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
+        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
 
     }
 
@@ -236,7 +236,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("테스트 13: 회원 탈퇴 실패 403 : 본인이 아닐 시")
+    @DisplayName("테스트 13: 회원 탈퇴 실패 401 : 본인이 아닐 시(닉네임불일치)")
     public void 회원_탈퇴_실패_FORBIDDEN_1() throws Exception {
         // given
         String accessToken = withDrawLogin();
@@ -268,15 +268,11 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = withDrawLogin();
         // when
-        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken,toBeWithdrawNickname);
+        ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, toBeWithdrawNickname);
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
 
     }
-
-
-
-
 
 
     private static ExtractableResponse<Response> memberCreateRequest(MemberCreateRequest request) {
