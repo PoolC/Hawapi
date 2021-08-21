@@ -6,14 +6,14 @@ import com.moviePicker.api.auth.exception.ExpiredTokenException;
 import com.moviePicker.api.auth.exception.UnauthenticatedException;
 import com.moviePicker.api.auth.exception.UnauthorizedException;
 import com.moviePicker.api.auth.exception.WrongTokenException;
-import com.moviePicker.api.comment.domain.Comment;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.dto.MemberUpdateRequest;
 import com.moviePicker.api.movie.domain.MovieWatched;
 import com.moviePicker.api.movie.domain.MovieWished;
+import com.moviePicker.api.review.domain.Comment;
+import com.moviePicker.api.review.domain.Recommendation;
+import com.moviePicker.api.review.domain.Report;
 import com.moviePicker.api.review.domain.Review;
-import com.moviePicker.api.reviewRecommended.domain.ReviewRecommended;
-import com.moviePicker.api.reviewReported.domain.ReviewReported;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -65,10 +65,10 @@ public class Member extends TimestampEntity implements UserDetails {
     List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    List<ReviewRecommended> reviewRecommendedList = new ArrayList<>();
+    List<Recommendation> recommendationList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    List<ReviewReported> reviewReportedList = new ArrayList<>();
+    List<Report> reportList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     List<MovieWatched> movieWatchedList = new ArrayList<>();

@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/authorization").not().hasAuthority(MemberRole.EXPELLED.name()) //TODO: 동작은 되지만 논리상 맞는지 모르겠다.
                 .antMatchers(HttpMethod.PUT, "/auth/authorization").not().hasAuthority(MemberRole.EXPELLED.name())
-
+                .antMatchers(HttpMethod.PUT, "/movies/wish").not().hasAuthority(MemberRole.EXPELLED.name())
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService),

@@ -93,13 +93,12 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
                 .movieCode(specificMovieCode)
                 .title("specificMovie")
                 .build();
-        specificReview = Review.builder()
-                .build();
+        specificReview = Review.of(defaultMember, specificMovie, "specificReview", "specificReviewContent");
 
 //        specificReview.setMovie(specificMovie);
 //        specificReview.setMember(defaultMember);
-        Review.setMovie(specificReview, specificMovie);
-        Review.setMember(specificReview, defaultMember);
+//        Review.setMovie(specificReview, specificMovie);
+//        Review.setMember(specificReview, defaultMember);
         movieRepository.save(specificMovie);
         reviewRepository.save(specificReview);
 
@@ -111,13 +110,13 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
             wishMovies.add(Movie.builder()
                     .movieCode("wishMovieCode" + Integer.toString(i))
                     .build());
-            movieWishedList.add(MovieWished.createMovieWished(defaultMember, wishMovies.get(i)));
+            movieWishedList.add(MovieWished.of(defaultMember, wishMovies.get(i)));
         }
         for (int i = 0; i < totalMoviesSize; ++i) {
             watchMovies.add(Movie.builder()
                     .movieCode("watchedMovieCode" + Integer.toString(i))
                     .build());
-            movieWatchedList.add(MovieWatched.createMovieWatched(defaultMember, watchMovies.get(i)));
+            movieWatchedList.add(MovieWatched.of(defaultMember, watchMovies.get(i)));
         }
         for (int i = 0; i < totalMoviesSize; ++i) {
             movieRepository.save(wishMovies.get(i));

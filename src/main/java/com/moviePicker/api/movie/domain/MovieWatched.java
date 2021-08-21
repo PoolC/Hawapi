@@ -34,7 +34,7 @@ public class MovieWatched extends TimestampEntity {
         member.getMovieWatchedList().add(this);
     }
 
-    public static MovieWatched createMovieWatched(Member member, Movie movie) {
+    public static MovieWatched of(Member member, Movie movie) {
         return new MovieWatched(member, movie);
     }
 }

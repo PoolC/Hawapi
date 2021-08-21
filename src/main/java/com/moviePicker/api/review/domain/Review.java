@@ -1,15 +1,10 @@
 package com.moviePicker.api.review.domain;
 
 
-import com.moviePicker.api.comment.domain.Comment;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.movie.domain.Movie;
-import com.moviePicker.api.reviewRecommended.domain.ReviewRecommended;
-import com.moviePicker.api.reviewReported.domain.ReviewReported;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,7 +14,6 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity(name = "reviews")
 @Getter
-@Setter
 public class Review extends TimestampEntity {
 
     @Id
@@ -28,10 +22,13 @@ public class Review extends TimestampEntity {
     private Long id;
 
     @Column(name = "report_count")
-    private int report_count;
+    private int reportCount;
 
     @Column(name = "recommendation_count")
-    private int recommendation_count;
+    private int recommendationCount;
+
+    @Column(name = "title", columnDefinition = "LONGTEXT")
+    private String title;
 
     @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
@@ -48,39 +45,30 @@ public class Review extends TimestampEntity {
     List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "review")
-    List<ReviewRecommended> reviewRecommendedList = new ArrayList<>();
+    List<Recommendation> recommendationList = new ArrayList<>();
 
     @OneToMany(mappedBy = "review")
-    List<ReviewReported> reviewReportedList = new ArrayList<>();
+    List<Report> reportList = new ArrayList<>();
 
     protected Review() {
     }
 
-    @Builder
-    public Review(Long id, int report_count, int recommendation_count, String content, Member member, Movie movie) {
-        this.id = id;
-        this.report_count = report_count;
-        this.recommendation_count = recommendation_count;
-        this.content = content;
+
+    private Review(Member member, Movie movie, String title, String content) {
         this.member = member;
         this.movie = movie;
+        this.title = title;
+        this.content = content;
+        this.reportCount = 0;
+        this.recommendationCount = 0;
+
+        member.getReviewList().add(this);
+        movie.getReviewList().add(this);
     }
 
-    //손봐야됨
-    public static void setMember(Review review, Member member) {
-        if (review.member != null) {
-            review.member.getReviewList().remove(review);
-        }
-        review.member = member;
-        member.getReviewList().add(review);
+    public static Review of(Member member, Movie movie, String title, String content) {
+        return new Review(member, movie, title, content);
     }
 
-    public static void setMovie(Review review, Movie movie) {
-        if (review.movie != null) {
-            review.movie.getReviewList().remove(review);
-        }
-        review.movie = movie;
-        movie.getReviewList().add(review);
-    }
 
 }

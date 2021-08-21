@@ -1,8 +1,7 @@
-package com.moviePicker.api.comment.domain;
+package com.moviePicker.api.review.domain;
 
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
-import com.moviePicker.api.review.domain.Review;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -30,5 +29,17 @@ public class Comment extends TimestampEntity {
     private Member member;
 
     protected Comment() {
+    }
+
+    private Comment(String content, Review review, Member member) {
+        this.content = content;
+        this.review = review;
+        this.member = member;
+        member.getCommentList().add(this);
+        review.getCommentList().add(this);
+    }
+
+    public static Comment of(String content, Review review, Member member) {
+        return new Comment(content, review, member);
     }
 }

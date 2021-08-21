@@ -100,7 +100,7 @@ public class MovieServiceImpl implements MovieService {
             movieWishedRepository.removeByMemberAndMovie(registerMember, registerMovie);
             return false;
         } else {
-            movieWishedRepository.save(MovieWished.createMovieWished(registerMember, registerMovie));
+            movieWishedRepository.save(MovieWished.of(registerMember, registerMovie));
             return true;
         }
     }
@@ -116,7 +116,7 @@ public class MovieServiceImpl implements MovieService {
             movieWatchedRepository.removeByMemberAndMovie(registerMember, registerMovie);
             return false;
         } else {
-            movieWatchedRepository.save(MovieWatched.createMovieWatched(registerMember, registerMovie));
+            movieWatchedRepository.save(MovieWatched.of(registerMember, registerMovie));
             return true;
         }
     }

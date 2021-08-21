@@ -34,7 +34,7 @@ public class MovieWished extends TimestampEntity {
         member.getMovieWishedList().add(this);
     }
 
-    public static MovieWished createMovieWished(Member member, Movie movie) {
+    public static MovieWished of(Member member, Movie movie) {
         return new MovieWished(member, movie);
     }
 }

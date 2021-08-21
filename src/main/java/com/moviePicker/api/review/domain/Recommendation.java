@@ -1,8 +1,7 @@
-package com.moviePicker.api.reviewRecommended.domain;
+package com.moviePicker.api.review.domain;
 
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
-import com.moviePicker.api.review.domain.Review;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -11,7 +10,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity(name = "recommend")
 @Getter
-public class ReviewRecommended extends TimestampEntity {
+public class Recommendation extends TimestampEntity {
 
     @Id
     @GeneratedValue
@@ -26,7 +25,18 @@ public class ReviewRecommended extends TimestampEntity {
     @JoinColumn(name = "review_id", nullable = false, referencedColumnName = "id")
     private Review review;
 
-    protected ReviewRecommended() {
+    protected Recommendation() {
     }
 
+    private Recommendation(Member member, Review review) {
+
+        this.member = member;
+        this.review = review;
+        member.getRecommendationList().add(this);
+        review.getRecommendationList().add(this);
+    }
+
+    public static Recommendation of(Member member, Review review) {
+        return new Recommendation(member, review);
+    }
 }
