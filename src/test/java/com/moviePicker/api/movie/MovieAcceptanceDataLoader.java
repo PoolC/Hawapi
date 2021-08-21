@@ -7,10 +7,10 @@ import com.moviePicker.api.member.domain.MemberRole;
 import com.moviePicker.api.member.domain.MemberRoles;
 import com.moviePicker.api.member.repository.MemberRepository;
 import com.moviePicker.api.movie.domain.Movie;
-import com.moviePicker.api.movie.repository.MovieRepository;
 import com.moviePicker.api.movie.domain.MovieWatched;
-import com.moviePicker.api.movie.repository.MovieWatchedRepository;
 import com.moviePicker.api.movie.domain.MovieWished;
+import com.moviePicker.api.movie.repository.MovieRepository;
+import com.moviePicker.api.movie.repository.MovieWatchedRepository;
 import com.moviePicker.api.movie.repository.MovieWishedRepository;
 import com.moviePicker.api.review.domain.Review;
 import com.moviePicker.api.review.repository.ReviewRepository;
@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
 
     public final static Long specificReviewId = 1L;
 
-    public final static List<String> boxOfficeMovieCode = new ArrayList<>();
+
     public final static List<Movie> wishMovies = new ArrayList<>();
     public final static List<Movie> watchMovies = new ArrayList<>();
     public final static List<MovieWished> movieWishedList = new ArrayList<>();
@@ -64,8 +63,6 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         generateDefaultMember();
-
-        generateBoxOfficeMovies();
 
         generateSpecificMovieAndReview();
 
@@ -90,33 +87,21 @@ public class MovieAcceptanceDataLoader implements CommandLineRunner {
         memberRepository.save(defaultMember);
     }
 
-    private void generateBoxOfficeMovies() {
-        for (int i = 0; i < totalMoviesSize; ++i) {
-            this.boxOfficeMovieCode.add("boxOfficeCode" + i);
-            movieRepository.save(Movie.builder()
-                    .movieCode("boxOfficeCode" + i)
-                    .build());
-        }
-    }
 
-    @Transactional
     private void generateSpecificMovieAndReview() {
         specificMovie = Movie.builder()
                 .movieCode(specificMovieCode)
                 .title("specificMovie")
                 .build();
         specificReview = Review.builder()
-                .id(specificReviewId)
                 .build();
 
-        specificReview.setMovie(specificMovie);
-        specificReview.setMember(defaultMember);
-
+//        specificReview.setMovie(specificMovie);
+//        specificReview.setMember(defaultMember);
+        Review.setMovie(specificReview, specificMovie);
+        Review.setMember(specificReview, defaultMember);
         movieRepository.save(specificMovie);
         reviewRepository.save(specificReview);
-
-//        Review.setMovie(specificReview, specificMovie);
-//        Review.setMember(specificReview, defaultMember);
 
 
     }

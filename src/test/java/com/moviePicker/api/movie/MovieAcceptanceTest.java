@@ -24,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static com.moviePicker.api.auth.AuthAcceptanceTest.loginRequest;
 import static com.moviePicker.api.movie.MovieAcceptanceDataLoader.*;
+import static com.moviePicker.api.movie.infra.MovieProvider.boxOfficeMovieCodes;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -47,39 +48,39 @@ public class MovieAcceptanceTest extends AcceptanceTest {
     private MemberRepository memberRepository;
 
 
-//    @Test
-//    @DisplayName("테스트 01: 현재 상영중인 영화목록조회 실패 404 : 잘못된 페이지 쿼리 파라미터 입력했을때 ")
-//    public void 현재_상영중인_영화목록_실패_NOT_FOUND() throws Exception {
-//
-//        //given
-//        int invalidPageNumber = 4;
-//
-//        //when
-//        ExtractableResponse<Response> response = searchMoviesRunning(invalidPageNumber);
-//
-//        //then
-//        assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 02: 현재 상영중인 영화목록조회 성공 200")
-//    public void 현재_상영중인_영화목록조회_성공() throws Exception {
-//
-//        //given
-//        int validPageNumber = 0;
-//        int expectingSize = sizeOfPage;
-//        //when
-//        ExtractableResponse<Response> response = searchMoviesRunning(validPageNumber);
-//        MoviesResponse responseBody = response.as(MoviesResponse.class);
-//
-//        //then
-//        assertThat(response.statusCode()).isEqualTo(OK.value());
-//        assertThat(responseBody.getMovies()).hasSize(expectingSize);
-//        assertThat(responseBody.getMovies().get(0)).isEqualTo(boxOfficeMovieCode.get(0));
-//
-//
-//    }
+    @Test
+    @DisplayName("테스트 01: 현재 상영중인 영화목록조회 실패 404 : 잘못된 페이지 쿼리 파라미터 입력했을때 ")
+    public void 현재_상영중인_영화목록_실패_NOT_FOUND() throws Exception {
+
+        //given
+        int invalidPageNumber = 6;
+
+        //when
+        ExtractableResponse<Response> response = searchMoviesRunning(invalidPageNumber);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
+
+    }
+
+    @Test
+    @DisplayName("테스트 02: 현재 상영중인 영화목록조회 성공 200")
+    public void 현재_상영중인_영화목록조회_성공() throws Exception {
+
+        //given
+        int validPageNumber = 0;
+        int expectingSize = sizeOfPage;
+        //when
+        ExtractableResponse<Response> response = searchMoviesRunning(validPageNumber);
+        MoviesResponse responseBody = response.as(MoviesResponse.class);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(OK.value());
+        assertThat(responseBody.getMovies()).hasSize(expectingSize);
+        assertThat(responseBody.getMovies().get(0).getMovieCode()).isEqualTo(boxOfficeMovieCodes.get(0));
+
+
+    }
 
     @Test
     @DisplayName("테스트 03: 검색어로 영화목록조회 실패 404 : 검색어를 입력하지 않았을때")

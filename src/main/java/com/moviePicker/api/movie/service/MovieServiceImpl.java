@@ -3,11 +3,13 @@ package com.moviePicker.api.movie.service;
 import com.moviePicker.api.auth.exception.UnauthenticatedException;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.member.service.MemberService;
+import com.moviePicker.api.movie.domain.BoxOfficeMovie;
 import com.moviePicker.api.movie.domain.Movie;
-import com.moviePicker.api.movie.repository.MovieRepository;
 import com.moviePicker.api.movie.domain.MovieWatched;
-import com.moviePicker.api.movie.repository.MovieWatchedRepository;
 import com.moviePicker.api.movie.domain.MovieWished;
+import com.moviePicker.api.movie.repository.BoxOfficeMovieRepository;
+import com.moviePicker.api.movie.repository.MovieRepository;
+import com.moviePicker.api.movie.repository.MovieWatchedRepository;
 import com.moviePicker.api.movie.repository.MovieWishedRepository;
 import com.moviePicker.api.review.domain.Review;
 import com.moviePicker.api.review.repository.ReviewRepository;
@@ -27,19 +29,20 @@ public class MovieServiceImpl implements MovieService {
 
     private final MemberService memberService;
     private final MovieRepository movieRepository;
+    private final BoxOfficeMovieRepository boxOfficeMovieRepository;
     private final ReviewRepository reviewRepository;
     private final MovieWishedRepository movieWishedRepository;
     private final MovieWatchedRepository movieWatchedRepository;
 
     @Override
-    public List<Movie> searchMoviesRunning(Pageable pageable) {
+    public List<BoxOfficeMovie> searchMoviesRunning(Pageable pageable) {
 
-//        Page<Movie> boxOfficeMovies = movieRepository.findAllByMovieCode(boxOfficeMovieCodes, pageable);
-//        checkValidPageNumber(pageable.getPageNumber(), boxOfficeMovies.getTotalPages());
-//
-//
-//        return boxOfficeMovies.getContent();
-        return null;
+        Page<BoxOfficeMovie> boxOfficeMovies = boxOfficeMovieRepository.findAll(pageable);
+        checkValidPageNumber(pageable.getPageNumber(), boxOfficeMovies.getTotalPages());
+
+
+        return boxOfficeMovies.getContent();
+
     }
 
     @Override
@@ -72,15 +75,17 @@ public class MovieServiceImpl implements MovieService {
     public Movie searchMovieByMovieCode(String movieCode) {
         return movieRepository.findByMovieCode(movieCode)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("존재하지 않는 movieId 입니다 "+movieCode));
+                        new IllegalArgumentException("존재하지 않는 movieId 입니다 " + movieCode));
     }
 
     @Override
     public Movie searchMovieByReviewId(Long reviewId) {
         //reviewService 에서 작성해야 될수도
-        Review review=reviewRepository.findById(reviewId)
-                .orElseThrow(()->
-                        new IllegalArgumentException(("존재하지 않는 reviewId 입니다 "+reviewId)));
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(("존재하지 않는 reviewId 입니다 " + reviewId)));
+        List<Review> all = reviewRepository.findAll();
+
         return review.getMovie();
     }
 
@@ -89,13 +94,12 @@ public class MovieServiceImpl implements MovieService {
     public boolean registerMovieWished(Member member, String movieCode) {
         checkIsLogin(member);
         checkMovieCodeExist(movieCode);
-        Member registerMember=memberService.getMemberByEmail(member.getEmail());
-        Movie registerMovie=searchMovieByMovieCode(movieCode);
-        if(movieWishedRepository.findByMemberAndMovie(registerMember,registerMovie).isPresent()){
-            movieWishedRepository.removeByMemberAndMovie(registerMember,registerMovie);
+        Member registerMember = memberService.getMemberByEmail(member.getEmail());
+        Movie registerMovie = searchMovieByMovieCode(movieCode);
+        if (movieWishedRepository.findByMemberAndMovie(registerMember, registerMovie).isPresent()) {
+            movieWishedRepository.removeByMemberAndMovie(registerMember, registerMovie);
             return false;
-        }
-        else{
+        } else {
             movieWishedRepository.save(MovieWished.createMovieWished(registerMember, registerMovie));
             return true;
         }
@@ -106,13 +110,12 @@ public class MovieServiceImpl implements MovieService {
     public boolean registerMovieWatched(Member member, String movieCode) {
         checkIsLogin(member);
         checkMovieCodeExist(movieCode);
-        Member registerMember=memberService.getMemberByEmail(member.getEmail());
-        Movie registerMovie=searchMovieByMovieCode(movieCode);
-        if(movieWatchedRepository.findByMemberAndMovie(registerMember,registerMovie).isPresent()){
-            movieWatchedRepository.removeByMemberAndMovie(registerMember,registerMovie);
+        Member registerMember = memberService.getMemberByEmail(member.getEmail());
+        Movie registerMovie = searchMovieByMovieCode(movieCode);
+        if (movieWatchedRepository.findByMemberAndMovie(registerMember, registerMovie).isPresent()) {
+            movieWatchedRepository.removeByMemberAndMovie(registerMember, registerMovie);
             return false;
-        }
-        else{
+        } else {
             movieWatchedRepository.save(MovieWatched.createMovieWatched(registerMember, registerMovie));
             return true;
         }
@@ -132,9 +135,9 @@ public class MovieServiceImpl implements MovieService {
         }
     }
 
-    private void checkMovieCodeExist(String movieCode){
-        if(!movieRepository.existsByMovieCode(movieCode)){
-            throw new IllegalArgumentException("해당 movieId 존재하지 않습니다 "+movieCode);
+    private void checkMovieCodeExist(String movieCode) {
+        if (!movieRepository.existsByMovieCode(movieCode)) {
+            throw new IllegalArgumentException("해당 movieId 존재하지 않습니다 " + movieCode);
         }
     }
 
