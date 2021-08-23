@@ -1,7 +1,8 @@
-package com.moviePicker.api.review.domain;
+package com.moviePicker.api.comment.domain;
 
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
+import com.moviePicker.api.review.domain.Review;
 import lombok.Getter;
 
 import javax.persistence.*;

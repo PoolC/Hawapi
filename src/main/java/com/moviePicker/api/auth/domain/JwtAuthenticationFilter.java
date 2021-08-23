@@ -1,6 +1,9 @@
 package com.moviePicker.api.auth.domain;
 
 import com.moviePicker.api.auth.infra.JwtTokenProvider;
+import com.moviePicker.api.member.domain.Member;
+import com.moviePicker.api.member.domain.MemberRole;
+import com.moviePicker.api.member.domain.MemberRoles;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +32,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 .map(userDetails -> new UsernamePasswordAuthenticationToken(userDetails,
                         "",
                         userDetails.getAuthorities()))
-                .ifPresent(authentication -> SecurityContextHolder.getContext().setAuthentication(authentication));
+                .ifPresentOrElse(authentication -> SecurityContextHolder.getContext().setAuthentication(authentication)
+                        , () -> {
+                            Member member = Member.builder().roles(MemberRoles.getDefaultFor(MemberRole.PUBLIC)).build();
+                            SecurityContextHolder.getContext().setAuthentication(
+                                    new UsernamePasswordAuthenticationToken(member, "", member.getAuthorities()));
+                        });
 
         chain.doFilter(request, response);
     }

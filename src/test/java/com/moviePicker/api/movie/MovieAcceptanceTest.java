@@ -132,8 +132,8 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
 
     @Test
-    @DisplayName("테스트 06: 보고싶은 영화목록조회 실패 401 : 로그인 안한 회원이 접근한 경우")
-    public void 보고싶은_영화목록조회_실패_UNAUTHORIZED() throws Exception {
+    @DisplayName("테스트 06: 보고싶은 영화목록조회 실패 403 : 로그인 안한 회원이 접근한 경우")
+    public void 보고싶은_영화목록조회_실패_FORBIDDEN() throws Exception {
 
         // given
         String accessToken = "";
@@ -144,7 +144,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
 
         // then
-        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+        assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
     }
 
     @Test
@@ -184,8 +184,8 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
 
     @Test
-    @DisplayName("테스트 09: 이미본 영화목록조회 실패 401 : 로그인 안한 회원이 접근한 경우")
-    public void 이미본_영화목록조회_실패_UNAUTHORIZED() throws Exception {
+    @DisplayName("테스트 09: 이미본 영화목록조회 실패 403 : 로그인 안한 회원이 접근한 경우")
+    public void 이미본_영화목록조회_실패_FORBIDDEN() throws Exception {
         // given
         String accessToken = "";
         int pageNumber = 1;
@@ -195,7 +195,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
 
         // then
-        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+        assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
 
     }
 
@@ -302,8 +302,8 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
 
     @Test
-    @DisplayName("테스트 16: 보고싶은 영화등록 실패 401 : 로그인 안한 회원이 접근한 경우 ")
-    public void 보고싶은_영화등록_실패_UNAUTHORIZED() throws Exception {
+    @DisplayName("테스트 16: 보고싶은 영화등록 실패 403 : 로그인 안한 회원이 접근한 경우 ")
+    public void 보고싶은_영화등록_실패_FORBIDDEN() throws Exception {
 
         //given
         String accessToken = "";
@@ -312,7 +312,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = registerWishMovie(accessToken, specificMovieCode);
 
         //then
-        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+        assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
     }
 
     @Test
@@ -379,8 +379,8 @@ public class MovieAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("테스트 20: 이미 본 영화등록 실패 401 : 로그인 안한 회원이 접근한 경우")
-    public void 이미본_영화등록_실패_UNAUTHORIZED() throws Exception {
+    @DisplayName("테스트 20: 이미 본 영화등록 실패 403 : 로그인 안한 회원이 접근한 경우")
+    public void 이미본_영화등록_실패_FORBIDDEN() throws Exception {
 
         //given
         String accessToken = "";
@@ -389,7 +389,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = registerWatchedMovie(accessToken, specificMovieCode);
 
         //then
-        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+        assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
     }
 
     @Test

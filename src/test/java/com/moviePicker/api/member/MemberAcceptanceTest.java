@@ -174,10 +174,9 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = memberUpdateRequest(accessToken, request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+        assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
 
     }
-
 
     @Test
     @DisplayName("테스트 09: 회원정보 수정 실패 400 ; 잘못된 형식으로 보낼 때")
@@ -216,6 +215,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(CONFLICT.value());
     }
 
+
     @Test
     @DisplayName("테스트 12: 회원정보 수정 성공 200")
     public void 회원정보_수정_성공_OK() {
@@ -239,8 +239,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("테스트 13: 회원 탈퇴 실패 401 : 본인이 아닐 시(닉네임불일치)")
     public void 회원_탈퇴_실패_FORBIDDEN_1() throws Exception {
         // given
-        String accessToken = withDrawLogin();
-
+        String accessToken = "";
         // when
         ExtractableResponse<Response> response = memberWithdrawalRequest(accessToken, defaultNickname);
 

@@ -1,6 +1,7 @@
 package com.moviePicker.api.review.domain;
 
 
+import com.moviePicker.api.comment.domain.Comment;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.movie.domain.Movie;

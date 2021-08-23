@@ -1,6 +1,5 @@
 package com.moviePicker.api.member.service;
 
-import com.moviePicker.api.auth.exception.UnauthenticatedException;
 import com.moviePicker.api.auth.exception.WrongPasswordException;
 import com.moviePicker.api.auth.infra.PasswordHashProvider;
 import com.moviePicker.api.member.domain.Member;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,6 +67,10 @@ public class MemberService {
         checkUpdateRequestValid(member, request);
         String encodePassword = passwordHashProvider.encodePassword(request.getPassword());
         member.updateMemberInfo(request, encodePassword);
+
+        //여기서 아이디 설정 안했으니 에러가 떠야함.
+        System.out.println("member.getUUID() = " + member.getUUID());
+        System.out.println("member.getRoles().hasRole(MemberRole.PUBLIC) = " + member.getRoles().hasRole(MemberRole.PUBLIC));
         memberRepository.saveAndFlush(member);
     }
 
@@ -84,23 +86,17 @@ public class MemberService {
     }
 
     private void checkUpdateRequestValid(Member member, MemberUpdateRequest request) {
-        checkIsLogin(member);
+
         checkDuplicateNickname(request.getNickname());
         request.checkPasswordMatches();
     }
 
     private void checkWithdrawRequestValid(Member member, String nickname) {
-        checkIsLogin(member);
+
         checkNicknameFormat(nickname);
         checkNicknameMatches(member, nickname);
     }
 
-    private void checkIsLogin(Member member) {
-        Optional.ofNullable(member)
-                .orElseThrow(() -> {
-                    throw new UnauthenticatedException("로그인 해주세요");
-                });
-    }
 
     private void checkDuplicateEmail(String email) {
         if (memberRepository.existsByEmail(email)) {

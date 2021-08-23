@@ -1,6 +1,6 @@
 package com.moviePicker.api.movie.service;
 
-import com.moviePicker.api.auth.exception.UnauthenticatedException;
+
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.member.service.MemberService;
 import com.moviePicker.api.movie.domain.BoxOfficeMovie;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +54,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieWished> searchMoviesWished(Member member, Pageable pageable) {
-        checkIsLogin(member);
+
         Page<MovieWished> movieWisheds = movieWishedRepository.findMovieWishedsByMember(member, pageable);
         checkValidPageNumber(pageable.getPageNumber(), movieWisheds.getTotalPages());
         return movieWisheds.getContent();
@@ -64,7 +63,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieWatched> searchMoviesWatched(Member member, Pageable pageable) {
-        checkIsLogin(member);
+
         Page<MovieWatched> movieWatcheds = movieWatchedRepository.findMovieWatchedsByMember(member, pageable);
         checkValidPageNumber(pageable.getPageNumber(), movieWatcheds.getTotalPages());
         return movieWatcheds.getContent();
@@ -92,7 +91,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public boolean registerMovieWished(Member member, String movieCode) {
-        checkIsLogin(member);
+
         checkMovieCodeExist(movieCode);
         Member registerMember = memberService.getMemberByEmail(member.getEmail());
         Movie registerMovie = searchMovieByMovieCode(movieCode);
@@ -108,7 +107,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public boolean registerMovieWatched(Member member, String movieCode) {
-        checkIsLogin(member);
+
         checkMovieCodeExist(movieCode);
         Member registerMember = memberService.getMemberByEmail(member.getEmail());
         Movie registerMovie = searchMovieByMovieCode(movieCode);
@@ -121,12 +120,6 @@ public class MovieServiceImpl implements MovieService {
         }
     }
 
-    private void checkIsLogin(Member member) {
-        Optional.ofNullable(member)
-                .orElseThrow(() -> {
-                    throw new UnauthenticatedException("로그인 해주세요");
-                });
-    }
 
     private void checkValidPageNumber(int pageNumber, int totalPages) {
         totalPages -= 1;

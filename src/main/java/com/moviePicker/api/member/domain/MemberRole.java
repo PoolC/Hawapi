@@ -36,6 +36,11 @@ public enum MemberRole implements Role {
         public String getDescription() {
             return "일반회원";
         }
+
+        @Override
+        public List<MemberRole> getRequiredRoles() {
+            return Collections.singletonList(MemberRole.MEMBER);
+        }
     },
     UNACCEPTED {
         @Override

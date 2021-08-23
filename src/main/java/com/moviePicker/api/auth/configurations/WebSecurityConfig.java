@@ -60,13 +60,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
+
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/authorization").not().hasAuthority(MemberRole.EXPELLED.name()) //TODO: 동작은 되지만 논리상 맞는지 모르겠다.
                 .antMatchers(HttpMethod.PUT, "/auth/authorization").not().hasAuthority(MemberRole.EXPELLED.name())
-                .antMatchers(HttpMethod.PUT, "/movies/wish").not().hasAuthority(MemberRole.EXPELLED.name())
+
+                
+                .antMatchers(HttpMethod.POST, "/movies/watched/*").hasAuthority(MemberRole.MEMBER.name())
+                .antMatchers(HttpMethod.POST, "/movies/wish/*").hasAuthority(MemberRole.MEMBER.name())
+                .antMatchers(HttpMethod.GET, "/movies/watched").hasAuthority(MemberRole.MEMBER.name())
+                .antMatchers(HttpMethod.GET, "/movies/wish").hasAuthority(MemberRole.MEMBER.name())
+
+                .antMatchers(HttpMethod.PUT, "/members/*").hasAuthority(MemberRole.MEMBER.name())
+                .antMatchers(HttpMethod.PUT, "/members/me").hasAuthority(MemberRole.MEMBER.name())
+                .antMatchers(HttpMethod.POST, "/members").hasAuthority(MemberRole.PUBLIC.name())
+
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService),
                         UsernamePasswordAuthenticationFilter.class);
+
+        http.headers().frameOptions().disable();
     }
 }
