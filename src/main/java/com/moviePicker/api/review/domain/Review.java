@@ -23,10 +23,10 @@ public class Review extends TimestampEntity {
     private Long id;
 
     @Column(name = "report_count")
-    private int reportCount;
+    private Integer reportCount;
 
     @Column(name = "recommendation_count")
-    private int recommendationCount;
+    private Integer recommendationCount;
 
     @Column(name = "title", columnDefinition = "LONGTEXT")
     private String title;

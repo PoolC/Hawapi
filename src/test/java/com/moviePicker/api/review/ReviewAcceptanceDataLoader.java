@@ -2,6 +2,7 @@ package com.moviePicker.api.review;
 
 import com.moviePicker.api.auth.infra.PasswordHashProvider;
 import com.moviePicker.api.comment.domain.Comment;
+import com.moviePicker.api.comment.repository.CommentRepository;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.member.domain.MemberRole;
 import com.moviePicker.api.member.domain.MemberRoles;
