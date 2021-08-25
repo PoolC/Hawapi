@@ -24,16 +24,13 @@ import java.util.Optional;
 public class MovieCrawler {
     private final String baseUrl = "https://movie.naver.com";
     private final String directoryUrl = "https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open=";
-
     private final String basicDataUrl = "https://movie.naver.com/movie/bi/mi/basic.naver?code=";
     private final String peopleDataUrl = "https://movie.naver.com/movie/bi/mi/detail.naver?code=";
     private final String photoDataUrl = "https://movie.naver.com/movie/bi/mi/photoView.naver?code=";
-
-
     private final String boxOfficeUrl = "https://movie.naver.com/movie/sdb/rank/rmovie.naver?sel=cur&date=";
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-    String date = sdf.format(Calendar.getInstance().getTime());
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    private String date = sdf.format(Calendar.getInstance().getTime());
 
     public ArrayList<String> crawlMovieCodesByYear(int year, int endPage) {
 

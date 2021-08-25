@@ -211,8 +211,6 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
-
-
     }
 
     @Test
@@ -245,7 +243,6 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
-
     }
 
 
@@ -262,7 +259,6 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
-
     }
 
     @Test
@@ -310,7 +306,6 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
-
     }
 
     @Test
