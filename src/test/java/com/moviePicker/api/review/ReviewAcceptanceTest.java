@@ -4,7 +4,15 @@ import com.moviePicker.api.AcceptanceTest;
 import com.moviePicker.api.auth.dto.LoginRequest;
 import com.moviePicker.api.auth.dto.LoginResponse;
 import com.moviePicker.api.comment.repository.CommentRepository;
+import com.moviePicker.api.member.dto.MemberCreateRequest;
+import com.moviePicker.api.member.repository.MemberRepository;
+import com.moviePicker.api.movie.MovieAcceptanceDataLoader;
+import com.moviePicker.api.movie.dto.MoviesResponse;
 import com.moviePicker.api.movie.repository.MovieRepository;
+import com.moviePicker.api.review.domain.Review;
+import com.moviePicker.api.review.dto.ReviewCreateRequest;
+import com.moviePicker.api.review.dto.ReviewResponse;
+import com.moviePicker.api.review.dto.ReviewUpdateRequest;
 import com.moviePicker.api.review.dto.ReviewsResponse;
 import com.moviePicker.api.review.repository.ReviewRepository;
 import io.restassured.RestAssured;
@@ -16,10 +24,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.swing.text.html.Option;
+
+import java.util.Optional;
 
 import static com.moviePicker.api.auth.AuthAcceptanceTest.loginRequest;
-import static com.moviePicker.api.movie.MovieAcceptanceDataLoader.memberEmail;
-import static com.moviePicker.api.movie.MovieAcceptanceDataLoader.memberPassword;
+import static com.moviePicker.api.movie.MovieAcceptanceDataLoader.*;
+import static com.moviePicker.api.movie.MovieAcceptanceDataLoader.specificMovie;
 import static com.moviePicker.api.review.ReviewAcceptanceDataLoader.memberNickname;
 import static com.moviePicker.api.review.ReviewAcceptanceDataLoader.specificMovieCode;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,164 +52,266 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
     @Autowired
     private CommentRepository commentRepository;
 
-//    @Test
-//    @DisplayName("테스트 01: 리뷰 작성 실패 401: 로그인하지 않았을떄")
-//    public void 리뷰_작성_실패_UNAUTHORIZED() throws Exception {
-//        // given
-//
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//
-//    @Test
-//    @DisplayName("테스트 02: 리뷰 작성 실패 400: title/ content 가 잘못된 경우")
-//    public void 리뷰_작성_실패_BAD_REQUEST() throws Exception {
-//        // given
-//
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 03: 리뷰 작성 실패 404: 잘못된 movie id 인 경우")
-//    public void 리뷰_작성_실패_NOT_FOUND() throws Exception {
-//        // given
-//
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 04: 리뷰 작성 성공 200")
-//    public void 리뷰_작성_성공_OK() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 05: 리뷰 수정하기 실패 403: 로그인 안한 회원이 접근한 경우 ")
-//    public void 리뷰_수정_실패_FORBIDDEN() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 06: 리뷰 수정하기 실패 401: 사용자가 작성한 리뷰가 아닐때 ")
-//    public void 리뷰_수정_실패_UNAUTHORIZED() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 07: 리뷰 수정하기 실패 404: review id 가 잘못된 경우")
-//    public void 리뷰_수정_실패_NOT_FOUND() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 08: 리뷰 수정하기 성공 200")
-//    public void 리뷰_수정_성공_OK() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 09: 리뷰 지우기 실패 403: 로그인 안한 회원이 접근한 경우 ")
-//    public void 리뷰_지우기_실패_FORBIDDEN() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 10:  리뷰 지우기 실패 401: 사용자가 작성한 리뷰가 아닐때 ")
-//    public void 리뷰_지우기_실패_UNAUTHORIZED() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 11: 리뷰 지우기 실패 404: review id 가 잘못된 경우")
-//    public void 리뷰_지우기_실패_NOT_FOUND() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 12: 리뷰 지우기 성공 200")
-//    public void 리뷰_지우기_성공_OK() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//    @Test
-//    @DisplayName("테스트 13: 리뷰아이디로 리뷰 조회 실패 404: 리뷰 ID 가 잘못된 경우")
-//    public void 리뷰아이디로_리뷰조회_실패_NOT_FOUND() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
-//
-//
-//    @Test
-//    @DisplayName("테스트 14: 리뷰아이디로 리뷰 조회 성공 200")
-//    public void 리뷰아이디로_리뷰조회_성공_OK() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//
-//    }
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Test
+    @DisplayName("테스트 01: 리뷰 작성 실패 403: 로그인하지 않았을떄")
+    public void 리뷰_작성_실패_FORBIDDEN() throws Exception {
+        // given
+        String accessToken="";
+        String movieId=specificMovieCode;
+        String title="createReviewTitle";
+        String content="createReviewContent";
+        ReviewCreateRequest request=ReviewCreateRequest.builder()
+                .movieId(movieId)
+                .title(title)
+                .content(content)
+                .build();
+
+        // when
+        ExtractableResponse<Response> response = reviewCreateRequest(accessToken,request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
+    }
+
+
+    @Test
+    @DisplayName("테스트 02: 리뷰 작성 실패 400: title/content 가 잘못된 경우")
+    public void 리뷰_작성_실패_BAD_REQUEST() throws Exception {
+        // given
+        String accessToken=defaultLogin();
+        String movieId=specificMovieCode;
+        String title="";
+        String content="createReviewContent";
+        ReviewCreateRequest request=ReviewCreateRequest.builder()
+                .movieId(movieId)
+                .title(title)
+                .content(content)
+                .build();
+
+        // when
+        ExtractableResponse<Response> response = reviewCreateRequest(accessToken,request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("테스트 03: 리뷰 작성 실패 404: 잘못된 movie id 인 경우")
+    public void 리뷰_작성_실패_NOT_FOUND() throws Exception {
+        // given
+        String accessToken=defaultLogin();
+        String movieId="notExistingMovieId";
+        String title="createReviewTitle";
+        String content="createReviewContent";
+        ReviewCreateRequest request=ReviewCreateRequest.builder()
+                .movieId(movieId)
+                .title(title)
+                .content(content)
+                .build();
+
+        // when
+        ExtractableResponse<Response> response = reviewCreateRequest(accessToken,request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
+    }
+
+    @Test
+    @DisplayName("테스트 04: 리뷰 작성 성공 200")
+    public void 리뷰_작성_성공_OK() throws Exception {
+        // given
+        String accessToken=defaultLogin();
+        String movieId=specificMovieCode;
+        String title="createReviewTitle";
+        String content="createReviewContent";
+        ReviewCreateRequest request=ReviewCreateRequest.builder()
+                .movieId(movieId)
+                .title(title)
+                .content(content)
+                .build();
+
+        // when
+        ExtractableResponse<Response> response = reviewCreateRequest(accessToken,request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(OK.value());
+        assertThat(reviewRepository.findByTitle(title)
+        ).isNotEqualTo(null);
+    }
+
+    @Test
+    @DisplayName("테스트 05: 리뷰 수정하기 실패 403: 로그인 안한 회원이 접근한 경우 ")
+    public void 리뷰_수정_실패_FORBIDDEN() throws Exception {
+        // given
+        String accessToken="";
+        Long reviewId=1L;
+        String title="updateReviewTitle";
+        String content="updateReviewContent";
+        ReviewUpdateRequest request=ReviewUpdateRequest.builder()
+                .title(title)
+                .content(content)
+                .build();
+
+        // when
+        ExtractableResponse<Response> response = reviewUpdateRequest(accessToken,request,reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
+    }
+
+    @Test
+    @DisplayName("테스트 06: 리뷰 수정하기 실패 401: 사용자가 작성한 리뷰가 아닐때 ")
+    public void 리뷰_수정_실패_UNAUTHORIZED() throws Exception {
+        // given
+        String accessToken=defaultLogin();
+        Long reviewId=64L;
+        String title="updateReviewTitle";
+        String content="updateReviewContent";
+        ReviewUpdateRequest request=ReviewUpdateRequest.builder()
+                .title(title)
+                .content(content)
+                .build();
+
+        // when
+        ExtractableResponse<Response> response = reviewUpdateRequest(accessToken,request,reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+    }
+
+    @Test
+    @DisplayName("테스트 07: 리뷰 수정하기 실패 404: review id 가 잘못된 경우")
+    public void 리뷰_수정_실패_NOT_FOUND() throws Exception {
+        // given
+        String accessToken=defaultLogin();
+        Long reviewId=100L;
+        String title="updateReviewTitle";
+        String content="updateReviewContent";
+        ReviewUpdateRequest request=ReviewUpdateRequest.builder()
+                .title(title)
+                .content(content)
+                .build();
+
+        // when
+        ExtractableResponse<Response> response = reviewUpdateRequest(accessToken,request,reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("테스트 08: 리뷰 수정하기 성공 200")
+    public void 리뷰_수정_성공_OK() throws Exception {
+        // given
+        String accessToken=defaultLogin();
+        Long reviewId=1L;
+        String title="updateReviewTitle";
+        String content="updateReviewContent";
+        ReviewUpdateRequest request=ReviewUpdateRequest.builder()
+                .title(title)
+                .content(content)
+                .build();
+
+        // when
+        ExtractableResponse<Response> response = reviewUpdateRequest(accessToken,request,reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(OK.value());
+        Review review=reviewRepository.findByTitle("updateReviewTitle").orElseThrow();
+        assertThat(review.getMember().getEmail()).isEqualTo(memberEmail);
+
+    }
+
+    @Test
+    @DisplayName("테스트 09: 리뷰 지우기 실패 403: 로그인 안한 회원이 접근한 경우 ")
+    public void 리뷰_지우기_실패_FORBIDDEN() throws Exception {
+        // given
+        String accessToken="";
+        Long reviewId=1L;
+
+        // when
+        ExtractableResponse<Response> response = reviewDeleteRequest(accessToken,reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
+    }
+
+    @Test
+    @DisplayName("테스트 10:  리뷰 지우기 실패 401: 사용자가 작성한 리뷰가 아닐때 ")
+    public void 리뷰_지우기_실패_UNAUTHORIZED() throws Exception {
+        // given
+        String accessToken=defaultLogin();
+        Long reviewId=64L;
+
+        // when
+        ExtractableResponse<Response> response = reviewDeleteRequest(accessToken,reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+    }
+
+    @Test
+    @DisplayName("테스트 11: 리뷰 지우기 실패 404: review id 가 잘못된 경우")
+    public void 리뷰_지우기_실패_NOT_FOUND() throws Exception {
+        // given
+        String accessToken=defaultLogin();
+        Long reviewId=100L;
+
+        // when
+        ExtractableResponse<Response> response = reviewDeleteRequest(accessToken,reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
+    }
+
+    @Test
+    @DisplayName("테스트 12: 리뷰 지우기 성공 200")
+    public void 리뷰_지우기_성공_OK() throws Exception {
+        // given
+        String accessToken=defaultLogin();
+        Long reviewId=4L;
+
+        // when
+        ExtractableResponse<Response> response = reviewDeleteRequest(accessToken,reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(OK.value());
+        assertThat(reviewRepository.findById(reviewId)).isEqualTo(Optional.empty());
+    }
+
+    @Test
+    @DisplayName("테스트 13: 리뷰아이디로 리뷰 조회 실패 404: 리뷰 ID 가 잘못된 경우")
+    public void 리뷰아이디로_리뷰조회_실패_NOT_FOUND() throws Exception {
+        // given
+        Long reviewId=100L;
+
+        // when
+        ExtractableResponse<Response> response = reviewFindByReviewId(reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
+
+    }
+
+
+    @Test
+    @DisplayName("테스트 14: 리뷰아이디로 리뷰 조회 성공 200")
+    public void 리뷰아이디로_리뷰조회_성공_OK() throws Exception {
+        // given
+        Long reviewId=1L;
+
+        // when
+        ExtractableResponse<Response> response = reviewFindByReviewId(reviewId);
+        ReviewResponse responseBody = response.as(ReviewResponse.class);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(OK.value());
+        assertThat(responseBody.getMovieCode()).isEqualTo("movie0");
+    }
 
 
     @Test
@@ -409,6 +524,46 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
         return loginRequest(request)
                 .as(LoginResponse.class)
                 .getAccessToken();
+    }
+
+    private static ExtractableResponse<Response> reviewCreateRequest(String accessToken,ReviewCreateRequest request) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .body(request)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when().post("/reviews")
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> reviewUpdateRequest(String accessToken, ReviewUpdateRequest request,Long reviewId) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .body(request)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when().put("/reviews/{reviewId}",reviewId)
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> reviewDeleteRequest(String accessToken, Long reviewId) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .when().delete("/reviews/{reviewId}", reviewId)
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> reviewFindByReviewId(Long reviewId) {
+        return RestAssured
+                .given().log().all()
+                .accept(APPLICATION_JSON_VALUE)
+                .when().get("/reviews/{reviewId}", reviewId)
+                .then().log().all()
+                .extract();
     }
 
 

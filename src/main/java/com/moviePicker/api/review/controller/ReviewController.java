@@ -2,9 +2,13 @@ package com.moviePicker.api.review.controller;
 
 
 import com.moviePicker.api.member.domain.Member;
+import com.moviePicker.api.member.dto.MemberCreateRequest;
 import com.moviePicker.api.movie.domain.Movie;
 import com.moviePicker.api.movie.repository.MovieRepository;
 import com.moviePicker.api.review.domain.Review;
+import com.moviePicker.api.review.dto.ReviewCreateRequest;
+import com.moviePicker.api.review.dto.ReviewResponse;
+import com.moviePicker.api.review.dto.ReviewUpdateRequest;
 import com.moviePicker.api.review.dto.ReviewsResponse;
 import com.moviePicker.api.review.repository.ReviewRepository;
 import com.moviePicker.api.review.service.ReviewService;
@@ -14,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -27,30 +32,29 @@ public class ReviewController {
     private final MovieRepository movieRepository;
     private final ReviewRepository reviewRepository;
 
-    //    @PostMapping()
-//    public ResponseEntity<Void> createReview() {
-//
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @PutMapping("/{reviewId}")
-//    public ResponseEntity<Void> updateReview() {
-//
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @DeleteMapping("/{reviewId}")
-//    public ResponseEntity<Void> deleteReview() {
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @GetMapping("/{reviewId}")
-//    public ResponseEntity<ReviewResponse> searchReviewByReviewId() {
-//
-//
-//        return ResponseEntity.ok().body(new ReviewResponse());
-//    }
-//
+    @PostMapping
+    public ResponseEntity<Void> createReview(@AuthenticationPrincipal Member member,@RequestBody @Valid ReviewCreateRequest request){
+        reviewService.createReview(member,request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<Void> updateReview(@AuthenticationPrincipal Member member,@RequestBody @Valid ReviewUpdateRequest request,@PathVariable("reviewId") Long reviewId){
+        reviewService.updateReview(member,request,reviewId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> updateReview(@AuthenticationPrincipal Member member,@PathVariable("reviewId") Long reviewId){
+        reviewService.deleteReview(member,reviewId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<ReviewResponse> findReviewByReviewId(@PathVariable("reviewId") Long reviewId){
+        return ResponseEntity.ok().body(new ReviewResponse((reviewService.searchByReviewId(reviewId))));
+    }
+
     @GetMapping("/movies/{movieId}")
     public ResponseEntity<ReviewsResponse> searchReviewsByMovieId(@PathVariable("movieId") String movieCode) {
         Movie movie = findMovie(movieCode);

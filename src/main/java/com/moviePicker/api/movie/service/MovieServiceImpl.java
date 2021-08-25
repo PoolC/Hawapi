@@ -74,7 +74,7 @@ public class MovieServiceImpl implements MovieService {
     public Movie searchMovieByMovieCode(String movieCode) {
         return movieRepository.findByMovieCode(movieCode)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("존재하지 않는 movieId 입니다 " + movieCode));
+                        new NoSuchElementException("존재하지 않는 movieId 입니다 " + movieCode));
     }
 
     @Override

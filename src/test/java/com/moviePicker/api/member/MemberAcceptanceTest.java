@@ -68,7 +68,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                 .password(createPassword)
                 .passwordCheck(wrongPasswordCheck)
                 .email(createEmail)
-
                 .build();
 
         // when

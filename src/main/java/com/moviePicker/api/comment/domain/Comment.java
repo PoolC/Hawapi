@@ -4,6 +4,7 @@ import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.review.domain.Review;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity(name = "comment")
 @Getter
+@Setter
 public class Comment extends TimestampEntity {
 
     @Id
