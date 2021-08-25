@@ -24,7 +24,6 @@ public class MemberRoles {
 
     public MemberRoles(Set<MemberRole> roles) {
         this.roles = new HashSet<>(roles);
-
         checkRolesAreCorrect();
     }
 

@@ -71,5 +71,20 @@ public class Review extends TimestampEntity {
         return new Review(member, movie, title, content);
     }
 
+    public void addRecommendationCount() {
+        recommendationCount += 1;
+    }
 
+    public void subtractRecommendationCount() {
+        if (recommendationCount - 1 < 0) {
+            return;
+        }
+        recommendationCount -= 1;
+    }
+
+    public void addReportCount() {
+        reportCount += 1;
+    }
+
+    
 }

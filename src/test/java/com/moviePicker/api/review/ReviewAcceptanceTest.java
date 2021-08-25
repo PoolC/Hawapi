@@ -39,164 +39,164 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    @Test
-    @DisplayName("테스트 01: 리뷰 작성 실패 401: 로그인하지 않았을떄")
-    public void 리뷰_작성_실패_UNAUTHORIZED() throws Exception {
-        // given
-
-
-        // when
-
-        // then
-
-    }
-
-
-    @Test
-    @DisplayName("테스트 02: 리뷰 작성 실패 400: title/ content 가 잘못된 경우")
-    public void 리뷰_작성_실패_BAD_REQUEST() throws Exception {
-        // given
-
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 03: 리뷰 작성 실패 404: 잘못된 movie id 인 경우")
-    public void 리뷰_작성_실패_NOT_FOUND() throws Exception {
-        // given
-
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 04: 리뷰 작성 성공 200")
-    public void 리뷰_작성_성공_OK() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 05: 리뷰 수정하기 실패 403: 로그인 안한 회원이 접근한 경우 ")
-    public void 리뷰_수정_실패_FORBIDDEN() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 06: 리뷰 수정하기 실패 401: 사용자가 작성한 리뷰가 아닐때 ")
-    public void 리뷰_수정_실패_UNAUTHORIZED() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 07: 리뷰 수정하기 실패 404: review id 가 잘못된 경우")
-    public void 리뷰_수정_실패_NOT_FOUND() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 08: 리뷰 수정하기 성공 200")
-    public void 리뷰_수정_성공_OK() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 09: 리뷰 지우기 실패 403: 로그인 안한 회원이 접근한 경우 ")
-    public void 리뷰_지우기_실패_FORBIDDEN() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 10:  리뷰 지우기 실패 401: 사용자가 작성한 리뷰가 아닐때 ")
-    public void 리뷰_지우기_실패_UNAUTHORIZED() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 11: 리뷰 지우기 실패 404: review id 가 잘못된 경우")
-    public void 리뷰_지우기_실패_NOT_FOUND() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 12: 리뷰 지우기 성공 200")
-    public void 리뷰_지우기_성공_OK() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-    @Test
-    @DisplayName("테스트 13: 리뷰아이디로 리뷰 조회 실패 404: 리뷰 ID 가 잘못된 경우")
-    public void 리뷰아이디로_리뷰조회_실패_NOT_FOUND() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
-
-    @Test
-    @DisplayName("테스트 14: 리뷰아이디로 리뷰 조회 성공 200")
-    public void 리뷰아이디로_리뷰조회_성공_OK() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
+//    @Test
+//    @DisplayName("테스트 01: 리뷰 작성 실패 401: 로그인하지 않았을떄")
+//    public void 리뷰_작성_실패_UNAUTHORIZED() throws Exception {
+//        // given
+//
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//
+//    @Test
+//    @DisplayName("테스트 02: 리뷰 작성 실패 400: title/ content 가 잘못된 경우")
+//    public void 리뷰_작성_실패_BAD_REQUEST() throws Exception {
+//        // given
+//
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 03: 리뷰 작성 실패 404: 잘못된 movie id 인 경우")
+//    public void 리뷰_작성_실패_NOT_FOUND() throws Exception {
+//        // given
+//
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 04: 리뷰 작성 성공 200")
+//    public void 리뷰_작성_성공_OK() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 05: 리뷰 수정하기 실패 403: 로그인 안한 회원이 접근한 경우 ")
+//    public void 리뷰_수정_실패_FORBIDDEN() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 06: 리뷰 수정하기 실패 401: 사용자가 작성한 리뷰가 아닐때 ")
+//    public void 리뷰_수정_실패_UNAUTHORIZED() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 07: 리뷰 수정하기 실패 404: review id 가 잘못된 경우")
+//    public void 리뷰_수정_실패_NOT_FOUND() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 08: 리뷰 수정하기 성공 200")
+//    public void 리뷰_수정_성공_OK() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 09: 리뷰 지우기 실패 403: 로그인 안한 회원이 접근한 경우 ")
+//    public void 리뷰_지우기_실패_FORBIDDEN() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 10:  리뷰 지우기 실패 401: 사용자가 작성한 리뷰가 아닐때 ")
+//    public void 리뷰_지우기_실패_UNAUTHORIZED() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 11: 리뷰 지우기 실패 404: review id 가 잘못된 경우")
+//    public void 리뷰_지우기_실패_NOT_FOUND() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 12: 리뷰 지우기 성공 200")
+//    public void 리뷰_지우기_성공_OK() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//    @Test
+//    @DisplayName("테스트 13: 리뷰아이디로 리뷰 조회 실패 404: 리뷰 ID 가 잘못된 경우")
+//    public void 리뷰아이디로_리뷰조회_실패_NOT_FOUND() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
+//
+//
+//    @Test
+//    @DisplayName("테스트 14: 리뷰아이디로 리뷰 조회 성공 200")
+//    public void 리뷰아이디로_리뷰조회_성공_OK() throws Exception {
+//        // given
+//
+//        // when
+//
+//        // then
+//
+//    }
 
 
     @Test
@@ -243,7 +243,6 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = searchMyReviewByMovieCode(accessToken, movieId);
 
-
         // then
         assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
 
@@ -260,7 +259,6 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = searchMyReviewByMovieCode(accessToken, movieId);
-
 
         // then
         assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
@@ -296,7 +294,6 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = recommendReview(accessToken, reviewId);
 
-
         // then
         assertThat(response.statusCode()).isEqualTo(FORBIDDEN.value());
     }
@@ -310,7 +307,6 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = recommendReview(accessToken, reviewId);
-
 
         // then
         assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
@@ -373,25 +369,9 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = reportReview(accessToken, reviewId);
 
-
         // then
         assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
 
-    }
-
-    @Test
-    @DisplayName("테스트 26: 리뷰 신고 실패 400: 이미 해당 회원이 한번 신고한 경우 ")
-    public void 리뷰_신고_실패_BAD_REQUEST() throws Exception {
-        // given
-        String accessToken = defaultLogin();
-        Long reviewId = 1L;
-
-        // when
-        ExtractableResponse<Response> response = reportReview(accessToken, reviewId);
-
-
-        // then
-        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Test
@@ -409,6 +389,21 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
         assertThat(reviewRepository.findById(reviewId).get().getReportCount().equals(1));
 
     }
+
+    @Test
+    @DisplayName("테스트 27: 리뷰 신고 실패 400: 이미 해당 회원이 한번 신고한 경우 ")
+    public void 리뷰_신고_실패_BAD_REQUEST() throws Exception {
+        // given
+        String accessToken = defaultLogin();
+        Long reviewId = 1L;
+
+        // when
+        ExtractableResponse<Response> response = reportReview(accessToken, reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
+    }
+
 
     public static String defaultLogin() {
         LoginRequest request = LoginRequest.builder()
@@ -446,7 +441,7 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .accept(APPLICATION_JSON_VALUE)
-                .when().get("/reviews/recommend/{reviewId}", reviewId)
+                .when().post("/reviews/recommend/{reviewId}", reviewId)
                 .then().log().all()
                 .extract();
     }
@@ -456,7 +451,7 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .accept(APPLICATION_JSON_VALUE)
-                .when().get("/reviews/report/{reviewId}", reviewId)
+                .when().post("/reviews/report/{reviewId}", reviewId)
                 .then().log().all()
                 .extract();
     }

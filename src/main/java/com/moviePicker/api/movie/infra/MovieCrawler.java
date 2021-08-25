@@ -32,7 +32,7 @@ public class MovieCrawler {
 
     private final String boxOfficeUrl = "https://movie.naver.com/movie/sdb/rank/rmovie.naver?sel=cur&date=";
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
     String date = sdf.format(Calendar.getInstance().getTime());
 
     public ArrayList<String> crawlMovieCodesByYear(int year, int endPage) {
@@ -43,23 +43,17 @@ public class MovieCrawler {
         url.append("&page=");
         ArrayList<String> resultList = new ArrayList<>();
         for (int i = 1; i <= endPage; i++) {
-
             String url_ = url.toString() + i;
-//            System.out.println("url_ = " + url_);
             try {
                 Connection conn = Jsoup.connect(url_);
                 Document doc = conn.get();
                 Elements directoryLists = doc.select("ul.directory_list");
-
-
                 Element directoryList = directoryLists.get(0);
                 Elements ElemsA = directoryList.select("a");
                 for (Element a : ElemsA) {
                     String targetUrl = a.attr("href");
                     if (targetUrl.charAt(0) == '/') {
                         String[] movieCode = targetUrl.split("code=");
-//                        System.out.println(movieCode[1]);
-
                         resultList.add(movieCode[1]);
                     }
 
@@ -84,7 +78,6 @@ public class MovieCrawler {
         try {
             Connection conn = Jsoup.connect(url.toString());
             Document doc = conn.get();
-
             Optional<Elements> elems = Optional.ofNullable(doc.select("td.title div.tit5 a"));
 
             if (elems.isPresent()) {
@@ -97,18 +90,14 @@ public class MovieCrawler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return resultList;
     }
 
 
     public void writeMovieDataToCsv(ArrayList<ArrayList<String>> movieData, String filePath) {
         ClassPathResource resource = new ClassPathResource(filePath);
-
-
         try {
             Path path = Paths.get(resource.getURI());
-
             CSVWriter writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(path.toString()), "EUC-KR"));
             String[] tableOfContent = new String[14];
             tableOfContent[0] = "movieCode";
@@ -125,7 +114,6 @@ public class MovieCrawler {
             tableOfContent[11] = "actors";
             tableOfContent[12] = "poster";
             tableOfContent[13] = "stillCuts";
-
             writer.writeNext(tableOfContent);
             for (ArrayList<String> dataRow : movieData) {
 
@@ -141,7 +129,6 @@ public class MovieCrawler {
 
 
     public ArrayList<ArrayList<String>> crawlMovieData(ArrayList<String> movieCodes) {
-
         ArrayList<ArrayList<String>> movieData = new ArrayList<>();
         for (String movieCode : movieCodes) {
             ArrayList<String> dataRow = new ArrayList<>();
@@ -149,14 +136,10 @@ public class MovieCrawler {
             crawlBasicData(dataRow, movieCode);
             crawlPeopleData(dataRow, movieCode);
             crawlPhotoData(dataRow, movieCode);
-
             movieData.add(dataRow);
 
         }
-
         return movieData;
-
-
     }
 
 
@@ -174,7 +157,6 @@ public class MovieCrawler {
             String pubDate = parsePubDate(doc);
             String plot = parsePlot(doc);
             String filmRating = parseFilmRating(doc);
-
             dataRow.add(title);
             dataRow.add(subtitle);
             dataRow.add(score);
@@ -184,8 +166,6 @@ public class MovieCrawler {
             dataRow.add(pubDate);
             dataRow.add(plot);
             dataRow.add(filmRating);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -198,11 +178,8 @@ public class MovieCrawler {
             Document doc = conn.get();
             String director = parseDirector(doc);
             String actors = parseActors(doc);
-
             dataRow.add(director);
             dataRow.add(actors);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -217,8 +194,6 @@ public class MovieCrawler {
             String stillCuts = parseStillCuts(doc);
             dataRow.add(poster);
             dataRow.add(stillCuts);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

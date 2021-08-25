@@ -56,7 +56,7 @@ public class Member extends TimestampEntity implements UserDetails {
     private LocalDateTime authorizationTokenValidUntil;
 
     @Column(name = "report_count")
-    private int reportCount = 0;
+    private Integer reportCount = 0;
 
     @OneToMany(mappedBy = "member")
     List<Review> reviewList = new ArrayList<>();
@@ -75,7 +75,6 @@ public class Member extends TimestampEntity implements UserDetails {
 
     @OneToMany(mappedBy = "member")
     List<MovieWished> movieWishedList = new ArrayList<>();
-
 
     @Embedded
     private MemberRoles roles;

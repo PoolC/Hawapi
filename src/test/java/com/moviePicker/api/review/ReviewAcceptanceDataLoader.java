@@ -74,7 +74,7 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
 
             movieRepository.save(movie);
             reviewRepository.save(review);
-
+            
             movieList.add(movie);
             reviewList.add(review);
         }

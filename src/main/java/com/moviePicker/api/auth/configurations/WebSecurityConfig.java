@@ -65,6 +65,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth/authorization").not().hasAuthority(MemberRole.EXPELLED.name()) //TODO: 동작은 되지만 논리상 맞는지 모르겠다.
                 .antMatchers(HttpMethod.PUT, "/auth/authorization").not().hasAuthority(MemberRole.EXPELLED.name())
 
+                .antMatchers(HttpMethod.GET, "/reviews/me/*").hasAuthority(MemberRole.MEMBER.name())
+                .antMatchers(HttpMethod.POST, "/reviews/recommend/*").hasAuthority(MemberRole.MEMBER.name())
+                .antMatchers(HttpMethod.POST, "/reviews/report/*").hasAuthority(MemberRole.MEMBER.name())
                 
                 .antMatchers(HttpMethod.POST, "/movies/watched/*").hasAuthority(MemberRole.MEMBER.name())
                 .antMatchers(HttpMethod.POST, "/movies/wish/*").hasAuthority(MemberRole.MEMBER.name())

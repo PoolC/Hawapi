@@ -62,15 +62,11 @@ public class MemberService {
                         .build()
         );
     }
-
+    
     public void update(Member member, MemberUpdateRequest request) {
         checkUpdateRequestValid(member, request);
         String encodePassword = passwordHashProvider.encodePassword(request.getPassword());
         member.updateMemberInfo(request, encodePassword);
-
-        //여기서 아이디 설정 안했으니 에러가 떠야함.
-        System.out.println("member.getUUID() = " + member.getUUID());
-        System.out.println("member.getRoles().hasRole(MemberRole.PUBLIC) = " + member.getRoles().hasRole(MemberRole.PUBLIC));
         memberRepository.saveAndFlush(member);
     }
 
