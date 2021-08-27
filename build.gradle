@@ -15,11 +15,6 @@ configurations {
     }
 }
 
-jar {
-    enabled = true
-    archiveClassifier = ''
-}
-
 repositories {
     mavenCentral()
 }
