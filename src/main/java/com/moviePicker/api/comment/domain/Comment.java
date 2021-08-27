@@ -1,5 +1,6 @@
 package com.moviePicker.api.comment.domain;
 
+import com.moviePicker.api.comment.dto.CommentUpdateRequest;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.review.domain.Review;
@@ -42,7 +43,12 @@ public class Comment extends TimestampEntity {
         review.getCommentList().add(this);
     }
 
-    public static Comment of(String content, Review review, Member member) {
+    public static Comment of(Member member, Review review, String content) {
+
         return new Comment(content, review, member);
+    }
+
+    public void updateCommentInfo(CommentUpdateRequest request) {
+        this.content = request.getContent();
     }
 }

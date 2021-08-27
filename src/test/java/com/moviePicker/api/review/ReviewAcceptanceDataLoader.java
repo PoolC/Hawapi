@@ -8,11 +8,7 @@ import com.moviePicker.api.member.domain.MemberRole;
 import com.moviePicker.api.member.domain.MemberRoles;
 import com.moviePicker.api.member.repository.MemberRepository;
 import com.moviePicker.api.movie.domain.Movie;
-import com.moviePicker.api.movie.domain.MovieWatched;
-import com.moviePicker.api.movie.domain.MovieWished;
 import com.moviePicker.api.movie.repository.MovieRepository;
-import com.moviePicker.api.movie.repository.MovieWatchedRepository;
-import com.moviePicker.api.movie.repository.MovieWishedRepository;
 import com.moviePicker.api.review.domain.Recommendation;
 import com.moviePicker.api.review.domain.Report;
 import com.moviePicker.api.review.domain.Review;
@@ -46,6 +42,7 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
             memberNickname = "존재하는닉네임",
             memberPassword = "password123!",
             specificMovieCode = "movie0";
+    public static Long commentIdOfAnotherMember;
     public final static List<Review> reviewList = new ArrayList<>();
     public final static List<Movie> movieList = new ArrayList<>();
     public final static List<Comment> commentList = new ArrayList<>();
@@ -54,13 +51,12 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        generateDefaultMember();
-        generateAnotherMember();
+        generateMembers();
         generateReviewsReportsRecommendation();
         generateComments();
     }
     
-    private void generateDefaultMember() {
+    private void generateMembers() {
         defaultMember = Member.builder()
                 .UUID(UUID.randomUUID().toString())
                 .email(memberEmail)
@@ -73,11 +69,6 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
                 .reportCount(0)
                 .roles(MemberRoles.getDefaultFor(MemberRole.MEMBER))
                 .build();
-
-        memberRepository.save(defaultMember);
-    }
-
-    private void generateAnotherMember(){
         anotherMember = Member.builder()
                 .UUID(UUID.randomUUID().toString())
                 .email("anotherEmail")
@@ -90,8 +81,11 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
                 .reportCount(0)
                 .roles(MemberRoles.getDefaultFor(MemberRole.MEMBER))
                 .build();
+
+        memberRepository.save(defaultMember);
         memberRepository.save(anotherMember);
     }
+
 
     private void generateReviewsReportsRecommendation() {
         for (int i = 0; i < 21; i++) {
@@ -99,11 +93,10 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
                     .movieCode("movie" + i)
                     .build();
             Review review = Review.of(defaultMember, movie, "reviewTitle" + i, "reviewContent" + i);
-            Report report=Report.of(defaultMember,review);
+            Report report=Report.of(anotherMember,review);
             Recommendation recommendation=Recommendation.of(defaultMember,review);
             movieRepository.save(movie);
             reviewRepository.save(review);
-            System.out.println("!!!"+i+review.getId());
             reportRepository.save(report);
             recommendationRepository.save(recommendation);
             movieList.add(movie);
@@ -119,12 +112,13 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
 
     private void generateComments() {
         for (int i = 0; i < 21; i++) {
-            Comment comment = Comment.of("comment" + i, reviewList.get(i), defaultMember);
+            Comment comment = Comment.of(defaultMember,  reviewList.get(i), "comment" + i);
             commentRepository.save(comment);
             commentList.add(comment);
         }
-
+        Comment commentOfAnotherMember = Comment.of(anotherMember, reviewList.get(0),"comment21" );
+        commentRepository.save(commentOfAnotherMember);
+        commentList.add(commentOfAnotherMember);
+        commentIdOfAnotherMember = commentRepository.findCommentByContent("comment21").get().getId();
     }
-
-
 }

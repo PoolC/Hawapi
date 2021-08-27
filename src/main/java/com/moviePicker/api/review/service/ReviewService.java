@@ -129,7 +129,6 @@ public class ReviewService {
     public void newReport(Member member, Review review) {
         Member reportingMember = memberRepository.getById(member.getUUID());
         Review reportedReview = reviewRepository.getById(review.getId());
-
         reportRepository.save(Report.of(reportingMember, reportedReview));
         reportedReview.addReportCount();
         reviewRepository.saveAndFlush(reportedReview);

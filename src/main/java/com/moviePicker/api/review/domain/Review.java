@@ -2,8 +2,10 @@ package com.moviePicker.api.review.domain;
 
 
 import com.moviePicker.api.comment.domain.Comment;
+import com.moviePicker.api.comment.dto.CommentUpdateRequest;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
+import com.moviePicker.api.member.dto.MemberUpdateRequest;
 import com.moviePicker.api.movie.domain.Movie;
 import lombok.Getter;
 import lombok.Setter;
@@ -87,6 +89,7 @@ public class Review extends TimestampEntity {
     public void addReportCount() {
         reportCount += 1;
     }
+
 
     
 }

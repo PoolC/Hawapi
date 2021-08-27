@@ -1,4 +1,4 @@
-package com.moviePicker.api.review.dto;
+package com.moviePicker.api.comment.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,22 +9,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Getter
-public class ReviewUpdateRequest {
+public class CommentCreateRequest {
 
-
-    @Size(min = 1, max = 30, message = "제목은 1자이상 30자 이하로 작성해주세요")
-    private final String title;
+    private Long reviewId;
 
     @NotBlank(message = "내용을 입력해주세요")
-    private final String content;
+    @Size(min = 1, max = 1000, message = "댓글은 1자이상 1000자 이하 작성 가능합니다.")
+    private String content;
 
-    @JsonCreator
     @Builder
-    public ReviewUpdateRequest(
-            @JsonProperty("title") String title,
+    public CommentCreateRequest(
+            @JsonProperty("reviewId") Long reviewId,
             @JsonProperty("content") String content){
-        this.title = title;
+        this.reviewId = reviewId;
         this.content = content;
     }
-
 }
