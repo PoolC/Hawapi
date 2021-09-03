@@ -16,7 +16,6 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity(name = "reviews")
 @Getter
-@Setter
 public class Review extends TimestampEntity {
 
     @Id
@@ -82,6 +81,14 @@ public class Review extends TimestampEntity {
             return;
         }
         recommendationCount -= 1;
+    }
+
+    public void setTitle(String title){
+        this.title=title;
+    }
+
+    public void setContent(String content){
+        this.content=content;
     }
 
     public void addReportCount() {
