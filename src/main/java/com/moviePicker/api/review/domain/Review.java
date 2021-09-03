@@ -5,6 +5,7 @@ import com.moviePicker.api.comment.domain.Comment;
 import com.moviePicker.api.common.domain.TimestampEntity;
 import com.moviePicker.api.member.domain.Member;
 import com.moviePicker.api.movie.domain.Movie;
+import com.moviePicker.api.review.dto.ReviewUpdateRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -71,6 +72,11 @@ public class Review extends TimestampEntity {
 
     public static Review of(Member member, Movie movie, String title, String content) {
         return new Review(member, movie, title, content);
+    }
+
+    public void updateReview(ReviewUpdateRequest request){
+        this.title = request.getTitle();
+        this.content = request.getContent();
     }
 
     public void addRecommendation(Recommendation recommendation){

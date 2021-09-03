@@ -50,12 +50,11 @@ public class ReviewService {
     }
 
     @Transactional
-    public void updateReview(Member member, ReviewUpdateRequest reviewCreateRequest,Long reviewId){
+    public void updateReview(Member member, ReviewUpdateRequest reviewUpdateRequest,Long reviewId){
         Review targetReview = getReviewByReviewId(reviewId);
         Member targetMember=memberService.getMemberByEmail(member.getEmail());
         checkReviewMember(targetReview, targetMember);
-        targetReview.setTitle(reviewCreateRequest.getTitle());
-        targetReview.setContent(reviewCreateRequest.getContent());
+        targetReview.updateReview(reviewUpdateRequest);
         reviewRepository.saveAndFlush(targetReview);
     }
 
