@@ -45,7 +45,9 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
     public final static String memberEmail = "defaultEmail@gmail.com",
             memberNickname = "존재하는닉네임",
             memberPassword = "password123!",
-            specificMovieCode = "movie0";
+            specificMovieCode = "movie0",
+            anotherMemberEmail = "anotherEmail",
+            anotherMemberPassword = "password123!";
     public final static List<Review> reviewList = new ArrayList<>();
     public final static List<Movie> movieList = new ArrayList<>();
     public final static List<Comment> commentList = new ArrayList<>();
@@ -80,8 +82,8 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
     private void generateAnotherMember(){
         anotherMember = Member.builder()
                 .UUID(UUID.randomUUID().toString())
-                .email("anotherEmail")
-                .nickname("anotherMemberNickname")
+                .email(anotherMemberEmail)
+                .nickname(anotherMemberPassword)
                 .passwordHash(passwordHashProvider.encodePassword(memberPassword))
                 .passwordResetToken(null)
                 .passwordResetTokenValidUntil(null)
@@ -103,7 +105,6 @@ public class ReviewAcceptanceDataLoader implements ApplicationRunner {
             Recommendation recommendation=Recommendation.of(defaultMember,review);
             movieRepository.save(movie);
             reviewRepository.save(review);
-            System.out.println("!!!"+i+review.getId());
             reportRepository.save(report);
             recommendationRepository.save(recommendation);
             movieList.add(movie);

@@ -4,10 +4,7 @@ import com.moviePicker.api.AcceptanceTest;
 import com.moviePicker.api.auth.dto.LoginRequest;
 import com.moviePicker.api.auth.dto.LoginResponse;
 import com.moviePicker.api.comment.repository.CommentRepository;
-import com.moviePicker.api.member.dto.MemberCreateRequest;
 import com.moviePicker.api.member.repository.MemberRepository;
-import com.moviePicker.api.movie.MovieAcceptanceDataLoader;
-import com.moviePicker.api.movie.dto.MoviesResponse;
 import com.moviePicker.api.movie.repository.MovieRepository;
 import com.moviePicker.api.review.domain.Review;
 import com.moviePicker.api.review.dto.ReviewCreateRequest;
@@ -31,10 +28,12 @@ import javax.swing.text.html.Option;
 import java.util.Optional;
 
 import static com.moviePicker.api.auth.AuthAcceptanceTest.loginRequest;
-import static com.moviePicker.api.movie.MovieAcceptanceDataLoader.*;
-import static com.moviePicker.api.movie.MovieAcceptanceDataLoader.specificMovie;
+
+
+import static com.moviePicker.api.review.ReviewAcceptanceDataLoader.*;
+import static com.moviePicker.api.review.ReviewAcceptanceDataLoader.memberEmail;
 import static com.moviePicker.api.review.ReviewAcceptanceDataLoader.memberNickname;
-import static com.moviePicker.api.review.ReviewAcceptanceDataLoader.specificMovieCode;
+import static com.moviePicker.api.review.ReviewAcceptanceDataLoader.memberPassword;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -424,22 +423,8 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("테스트 22: 리뷰 추천 성공 200 ")
-    public void 리뷰_추천_성공_OK() throws Exception {
-        // given
-        String accessToken = defaultLogin();
-        Long reviewId = 1L;
-
-        // when
-        ExtractableResponse<Response> response = recommendReview(accessToken, reviewId);
-
-        // then
-        assertThat(response.statusCode()).isEqualTo(OK.value());
-        assertThat(reviewRepository.findById(reviewId).get().getRecommendationCount().equals(1));
-    }
-
-    @Test
-    @DisplayName("테스트 23: 리뷰 추천 취소 성공 200 ")
+    @Transactional
+    @DisplayName("테스트 22: 리뷰 추천 취소 성공 200 ")
     public void 리뷰_추천_취소_성공_OK() throws Exception {
         // given
         String accessToken = defaultLogin();
@@ -451,7 +436,28 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
         assertThat(reviewRepository.findById(reviewId).get().getRecommendationCount().equals(0));
+        assertThat(reviewRepository.findById(reviewId).get().getRecommendationList().size()).isEqualTo(0);
+
     }
+
+    @Test
+    @Transactional
+    @DisplayName("테스트 23: 리뷰 추천 성공 200 ")
+    public void 리뷰_추천_성공_OK() throws Exception {
+        // given
+        String accessToken = defaultLogin();
+        Long reviewId = 1L;
+
+        // when
+        ExtractableResponse<Response> response = recommendReview(accessToken, reviewId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(OK.value());
+        assertThat(reviewRepository.findById(reviewId).get().getRecommendationCount().equals(1));
+        assertThat(reviewRepository.findById(reviewId).get().getRecommendationList().size()).isEqualTo(1);
+    }
+
+
 
     @Test
     @DisplayName("테스트 24: 리뷰 신고 실패 403: 로그인 안한 회원이 접근한 경우 ")
@@ -488,7 +494,7 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
     @DisplayName("테스트 26: 리뷰 신고 성공 200 ")
     public void 리뷰_신고_성공_OK() throws Exception {
         // given
-        String accessToken = defaultLogin();
+        String accessToken = anotherLogin();
         Long reviewId = 1L;
 
         // when
@@ -519,6 +525,17 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
         LoginRequest request = LoginRequest.builder()
                 .email(memberEmail)
                 .password(memberPassword)
+                .build();
+
+        return loginRequest(request)
+                .as(LoginResponse.class)
+                .getAccessToken();
+    }
+
+    public static String anotherLogin() {
+        LoginRequest request = LoginRequest.builder()
+                .email(anotherMemberEmail)
+                .password(anotherMemberPassword)
                 .build();
 
         return loginRequest(request)

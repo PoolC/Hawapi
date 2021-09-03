@@ -109,8 +109,10 @@ public class ReviewService {
         Member recommendingMember = memberRepository.getById(member.getUUID());
         Review recommendedReview = reviewRepository.getById(review.getId());
 
-        recommendationRepository.save(Recommendation.of(recommendingMember, recommendedReview));
-        recommendedReview.addRecommendationCount();
+        Recommendation recommendation = Recommendation.of(recommendingMember, recommendedReview);
+        recommendedReview.addRecommendation(recommendation);
+
+        recommendationRepository.saveAndFlush(recommendation);
         reviewRepository.saveAndFlush(recommendedReview);
     }
 
@@ -118,11 +120,12 @@ public class ReviewService {
     public void cancelRecommendation(Member member, Review review) {
         Member unRecommendingMember = memberRepository.getById(member.getUUID());
         Review unRecommendedReview = reviewRepository.getById(review.getId());
-        Optional<Recommendation> recommendation = recommendationRepository.findByMemberAndReview(unRecommendingMember, unRecommendedReview);
 
-        recommendationRepository.delete(recommendation.get());
-        unRecommendedReview.subtractRecommendationCount();
-        reviewRepository.save(unRecommendedReview);
+        Recommendation cancelingRecommendation = recommendationRepository.findByMemberAndReview(unRecommendingMember, unRecommendedReview).get();
+        unRecommendedReview.cancelRecommendation(cancelingRecommendation);
+
+        recommendationRepository.delete(cancelingRecommendation);
+        reviewRepository.saveAndFlush(unRecommendedReview);
     }
 
     @Transactional
@@ -130,8 +133,10 @@ public class ReviewService {
         Member reportingMember = memberRepository.getById(member.getUUID());
         Review reportedReview = reviewRepository.getById(review.getId());
 
-        reportRepository.save(Report.of(reportingMember, reportedReview));
-        reportedReview.addReportCount();
+        Report report = Report.of(reportingMember, reportedReview);
+        reportedReview.addReport(report);
+
+        reportRepository.save(report);
         reviewRepository.saveAndFlush(reportedReview);
     }
 

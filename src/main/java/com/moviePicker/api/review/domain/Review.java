@@ -73,18 +73,34 @@ public class Review extends TimestampEntity {
         return new Review(member, movie, title, content);
     }
 
-    public void addRecommendationCount() {
+    public void addRecommendation(Recommendation recommendation){
+        recommendationList.add(recommendation);
+        addRecommendationCount();
+
+    }
+
+    public void cancelRecommendation(Recommendation recommendation){
+        recommendationList.removeIf(rec ->(rec.getId().equals(recommendation.getId())));
+        subtractRecommendationCount();
+    }
+
+    public void addReport(Report report){
+        reportList.add(report);
+        addReportCount();
+    }
+
+    private void addRecommendationCount() {
         recommendationCount += 1;
     }
 
-    public void subtractRecommendationCount() {
+    private void subtractRecommendationCount() {
         if (recommendationCount - 1 < 0) {
             return;
         }
         recommendationCount -= 1;
     }
 
-    public void addReportCount() {
+    private void addReportCount() {
         reportCount += 1;
     }
 

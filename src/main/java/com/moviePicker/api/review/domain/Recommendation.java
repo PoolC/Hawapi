@@ -39,4 +39,6 @@ public class Recommendation extends TimestampEntity {
     public static Recommendation of(Member member, Review review) {
         return new Recommendation(member, review);
     }
+
+
 }
