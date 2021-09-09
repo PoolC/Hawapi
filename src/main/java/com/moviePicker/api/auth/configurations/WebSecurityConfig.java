@@ -61,9 +61,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
 
+
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/authorization").not().hasAuthority(MemberRole.EXPELLED.name()) //TODO: 동작은 되지만 논리상 맞는지 모르겠다.
                 .antMatchers(HttpMethod.PUT, "/auth/authorization").not().hasAuthority(MemberRole.EXPELLED.name())
+
+                .antMatchers(HttpMethod.POST, "/comments").hasAuthority(MemberRole.MEMBER.name())
+                .antMatchers(HttpMethod.PUT, "/comments/*").hasAuthority(MemberRole.MEMBER.name())
+                .antMatchers(HttpMethod.DELETE, "/comments/*").hasAuthority(MemberRole.MEMBER.name())
+
 
                 .antMatchers(HttpMethod.POST, "/reviews").hasAuthority(MemberRole.MEMBER.name())
                 .antMatchers(HttpMethod.PUT, "/reviews/{reviewId}").hasAuthority(MemberRole.MEMBER.name())

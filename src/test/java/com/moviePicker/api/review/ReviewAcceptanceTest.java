@@ -43,16 +43,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ReviewAcceptanceTest extends AcceptanceTest {
 
     @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
     private ReviewRepository reviewRepository;
-
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @Test
     @DisplayName("테스트 01: 리뷰 작성 실패 403: 로그인하지 않았을떄")
@@ -137,8 +128,7 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
-        assertThat(reviewRepository.findByTitle(title)
-        ).isNotEqualTo(null);
+        assertThat(reviewRepository.findByTitle(title).isPresent()).isEqualTo(true);
     }
 
     @Test
@@ -521,7 +511,7 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
     }
 
 
-    public static String defaultLogin() {
+    public String defaultLogin() {
         LoginRequest request = LoginRequest.builder()
                 .email(memberEmail)
                 .password(memberPassword)

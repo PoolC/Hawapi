@@ -50,11 +50,12 @@ public class ReviewService {
     }
 
     @Transactional
-    public void updateReview(Member member, ReviewUpdateRequest reviewUpdateRequest,Long reviewId){
+    public void updateReview(Member member, ReviewUpdateRequest reviewCreateRequest,Long reviewId){
         Review targetReview = getReviewByReviewId(reviewId);
         Member targetMember=memberService.getMemberByEmail(member.getEmail());
         checkReviewMember(targetReview, targetMember);
-        targetReview.updateReview(reviewUpdateRequest);
+        targetReview.setTitle(reviewCreateRequest.getTitle());
+        targetReview.setContent(reviewCreateRequest.getContent());
         reviewRepository.saveAndFlush(targetReview);
     }
 
@@ -108,10 +109,8 @@ public class ReviewService {
         Member recommendingMember = memberRepository.getById(member.getUUID());
         Review recommendedReview = reviewRepository.getById(review.getId());
 
-        Recommendation recommendation = Recommendation.of(recommendingMember, recommendedReview);
-        recommendedReview.addRecommendation(recommendation);
-
-        recommendationRepository.saveAndFlush(recommendation);
+        recommendationRepository.save(Recommendation.of(recommendingMember, recommendedReview));
+        recommendedReview.addRecommendationCount();
         reviewRepository.saveAndFlush(recommendedReview);
     }
 
@@ -119,23 +118,19 @@ public class ReviewService {
     public void cancelRecommendation(Member member, Review review) {
         Member unRecommendingMember = memberRepository.getById(member.getUUID());
         Review unRecommendedReview = reviewRepository.getById(review.getId());
+        Optional<Recommendation> recommendation = recommendationRepository.findByMemberAndReview(unRecommendingMember, unRecommendedReview);
 
-        Recommendation cancelingRecommendation = recommendationRepository.findByMemberAndReview(unRecommendingMember, unRecommendedReview).get();
-        unRecommendedReview.cancelRecommendation(cancelingRecommendation);
-
-        recommendationRepository.delete(cancelingRecommendation);
-        reviewRepository.saveAndFlush(unRecommendedReview);
+        recommendationRepository.delete(recommendation.get());
+        unRecommendedReview.subtractRecommendationCount();
+        reviewRepository.save(unRecommendedReview);
     }
 
     @Transactional
     public void newReport(Member member, Review review) {
         Member reportingMember = memberRepository.getById(member.getUUID());
         Review reportedReview = reviewRepository.getById(review.getId());
-
-        Report report = Report.of(reportingMember, reportedReview);
-        reportedReview.addReport(report);
-
-        reportRepository.save(report);
+        reportRepository.save(Report.of(reportingMember, reportedReview));
+        reportedReview.addReportCount();
         reviewRepository.saveAndFlush(reportedReview);
     }
 
