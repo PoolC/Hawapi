@@ -28,18 +28,17 @@ import java.util.stream.Collectors;
 public class MovieProvider implements ApplicationRunner {
 
     public static ArrayList<String> boxOfficeMovieCodes;
-
+    public final String updateDataFilePath = "data/updateData.csv";
+    public final String boxOfficeDataFilePath = "data/boxOffice.csv";
+    public final String sampleDataFilePath = "data/sample.csv";
     private final MovieRepository movieRepository;
     private final BoxOfficeMovieRepository boxOfficeMovieRepository;
     private final MovieCrawler movieCrawler;
     private final ModelMapper movieMapper;
 
-    public final String updateDataFilePath = "data/updateData.csv";
-    public final String boxOfficeDataFilePath = "data/boxOffice.csv";
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        readCsvAndSaveMovie("data/sample.csv");
+        readCsvAndSaveMovie(sampleDataFilePath);
         updateBoxOfficeData();
 
         List<Movie> movie = movieRepository.findAll();
@@ -62,7 +61,7 @@ public class MovieProvider implements ApplicationRunner {
                 .filter(movieCode -> (movieRepository.findById(movieCode).isEmpty()))
                 .collect(Collectors.toList());
 
-        System.out.println("updatingMovieCodes.size() = " + updatingMovieCodes.size());
+
         movieCrawler.writeMovieDataToCsv(movieCrawler.crawlMovieData((ArrayList<String>) updatingMovieCodes), updateDataFilePath);
         readCsvAndSaveMovie(updateDataFilePath);
 
@@ -79,16 +78,17 @@ public class MovieProvider implements ApplicationRunner {
                     .withType(CsvMovieData.class)
                     .build()
                     .parse();
+
             List<Movie> movieEntityList = csvMovieDataList.stream()
                     .map(dto -> (movieMapper.map(dto, Movie.class)))
                     .collect(Collectors.toList());
 
-
-            movieEntityList.forEach(movieRepository::save);
+            movieRepository.saveAll(movieEntityList);
 
 
         } catch (Exception e) {
             e.getStackTrace();
+            e.printStackTrace();
         }
 
     }
@@ -108,11 +108,12 @@ public class MovieProvider implements ApplicationRunner {
                     .collect(Collectors.toList());
 
 
-            movieEntityList.forEach(boxOfficeMovieRepository::save);
+            boxOfficeMovieRepository.saveAll(movieEntityList);
 
 
         } catch (Exception e) {
             e.getStackTrace();
+            e.printStackTrace();
         }
 
     }

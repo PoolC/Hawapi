@@ -1,5 +1,6 @@
 package com.moviePicker.api.movie.domain;
 
+import com.moviePicker.api.common.domain.TimestampEntity;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,7 +10,7 @@ import javax.persistence.Id;
 
 @Entity(name = "box_office_movies")
 @Getter
-public class BoxOfficeMovie {
+public class BoxOfficeMovie extends TimestampEntity {
 
     @Id
     @Column(name = "id")

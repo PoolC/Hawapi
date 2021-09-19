@@ -39,7 +39,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.14.1'
     implementation 'org.json:json:20190722'
     implementation 'com.opencsv:opencsv:4.4'
-    implementation 'org.modelmapper:modelmapper:2.3.8'
+    implementation 'org.modelmapper:modelmapper:2.4.4'
     compileOnly 'org.projectlombok:lombok'
 //    runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2'

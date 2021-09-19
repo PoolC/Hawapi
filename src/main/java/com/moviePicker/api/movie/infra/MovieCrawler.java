@@ -95,6 +95,7 @@ public class MovieCrawler {
         ClassPathResource resource = new ClassPathResource(filePath);
         try {
             Path path = Paths.get(resource.getURI());
+
             CSVWriter writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(path.toString()), "EUC-KR"));
             String[] tableOfContent = new String[14];
             tableOfContent[0] = "movieCode";

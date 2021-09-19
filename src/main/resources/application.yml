@@ -17,7 +17,7 @@ spring:
       hibernate:
     #        dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       show-sql: true # 실제 서비스시 삭제
   mail:
     default-encoding: UTF-8

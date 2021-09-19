@@ -108,9 +108,9 @@ public class ReviewService {
     public void newRecommendation(Member member, Review review) {
         Member recommendingMember = memberRepository.getById(member.getUUID());
         Review recommendedReview = reviewRepository.getById(review.getId());
-
-        recommendationRepository.save(Recommendation.of(recommendingMember, recommendedReview));
-        recommendedReview.addRecommendationCount();
+        Recommendation recommendation = Recommendation.of(recommendingMember, recommendedReview);
+        recommendationRepository.save(recommendation);
+        recommendedReview.addRecommendation(recommendation);
         reviewRepository.saveAndFlush(recommendedReview);
     }
 
@@ -121,7 +121,7 @@ public class ReviewService {
         Optional<Recommendation> recommendation = recommendationRepository.findByMemberAndReview(unRecommendingMember, unRecommendedReview);
 
         recommendationRepository.delete(recommendation.get());
-        unRecommendedReview.subtractRecommendationCount();
+        unRecommendedReview.cancelRecommendation(recommendation.get());
         reviewRepository.save(unRecommendedReview);
     }
 
@@ -129,8 +129,9 @@ public class ReviewService {
     public void newReport(Member member, Review review) {
         Member reportingMember = memberRepository.getById(member.getUUID());
         Review reportedReview = reviewRepository.getById(review.getId());
-        reportRepository.save(Report.of(reportingMember, reportedReview));
-        reportedReview.addReportCount();
+        Report report = Report.of(reportingMember, reportedReview);
+        reportRepository.save(report);
+        reportedReview.addReport(report);
         reviewRepository.saveAndFlush(reportedReview);
     }
 

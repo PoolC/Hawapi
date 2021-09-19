@@ -484,7 +484,7 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
     @DisplayName("테스트 26: 리뷰 신고 성공 200 ")
     public void 리뷰_신고_성공_OK() throws Exception {
         // given
-        String accessToken = anotherLogin();
+        String accessToken = defaultLogin();
         Long reviewId = 1L;
 
         // when
@@ -500,7 +500,7 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
     @DisplayName("테스트 27: 리뷰 신고 실패 400: 이미 해당 회원이 한번 신고한 경우 ")
     public void 리뷰_신고_실패_BAD_REQUEST() throws Exception {
         // given
-        String accessToken = defaultLogin();
+        String accessToken = anotherLogin();
         Long reviewId = 1L;
 
         // when
@@ -524,8 +524,8 @@ public class ReviewAcceptanceTest extends AcceptanceTest {
 
     public static String anotherLogin() {
         LoginRequest request = LoginRequest.builder()
-                .email(anotherMemberEmail)
-                .password(anotherMemberPassword)
+                .email("anotherEmail")
+                .password(memberPassword)
                 .build();
 
         return loginRequest(request)

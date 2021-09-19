@@ -47,6 +47,92 @@ public class MovieAcceptanceTest extends AcceptanceTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    private static ExtractableResponse<Response> searchMoviesRunning(int pageNumber) {
+        return RestAssured
+                .given().log().all()
+                .contentType(APPLICATION_JSON_VALUE)
+                .when().get("/movies/nowadays?page={pageNumber}", pageNumber)
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> searchMoviesByQuery(String query, int pageNumber) {
+        return RestAssured
+                .given().log().all()
+                .contentType(APPLICATION_JSON_VALUE)
+                .when().get("/movies/search/{query}?page={pageNumber}", query, pageNumber)
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> searchMoviesWished(String accessToken, int pageNumber) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when().get("/movies/wish?page={pageNumber}", pageNumber)
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> searchMoviesWatched(String accessToken, int pageNumber) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when().get("/movies/watched?page={pageNumber}", pageNumber)
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> searchMovieByMovieCode(String movieCode) {
+        return RestAssured
+                .given().log().all()
+                .accept(APPLICATION_JSON_VALUE)
+                .when().get("/movies/byMovieId/{movieId}", movieCode)
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> searchMovieByReviewId(Long reviewId) {
+        return RestAssured
+                .given().log().all()
+                .accept(APPLICATION_JSON_VALUE)
+                .when().get("/movies/byReviewId/{reviewsId}", reviewId)
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> registerWishMovie(String accessToken, String movieId) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when().post("/movies/wish/{movieId}", movieId)
+                .then().log().all()
+                .extract();
+    }
+
+    private static ExtractableResponse<Response> registerWatchedMovie(String accessToken, String movieId) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when().post("/movies/watched/{movieId}", movieId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static String defaultLogin() {
+        LoginRequest request = LoginRequest.builder()
+                .email(memberEmail)
+                .password(memberPassword)
+                .build();
+
+        return loginRequest(request)
+                .as(LoginResponse.class)
+                .getAccessToken();
+    }
 
     @Test
     @DisplayName("테스트 01: 현재 상영중인 영화목록조회 실패 404 : 잘못된 페이지 쿼리 파라미터 입력했을때 ")
@@ -130,7 +216,6 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
     }
 
-
     @Test
     @DisplayName("테스트 06: 보고싶은 영화목록조회 실패 403 : 로그인 안한 회원이 접근한 경우")
     public void 보고싶은_영화목록조회_실패_FORBIDDEN() throws Exception {
@@ -181,7 +266,6 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         assertThat(responseBody.getMovies()).hasSize(expectingSize);
 
     }
-
 
     @Test
     @DisplayName("테스트 09: 이미본 영화목록조회 실패 403 : 로그인 안한 회원이 접근한 경우")
@@ -234,9 +318,8 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
     }
 
-
     @Test
-    @DisplayName("테스트 12:영화 아이디로 영화조회 실패 400 : movieId가 잘못된 경우")
+    @DisplayName("테스트 12:영화 아이디로 영화조회 실패 404 : movieId가 잘못된 경우")
     public void 영화_아이디로_영화조회_실패_BAD_REQUEST() throws Exception {
 
         //given
@@ -246,7 +329,7 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = searchMovieByMovieCode(invalidMovieCode);
 
         //then
-        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(NOT_FOUND.value());
 
     }
 
@@ -300,7 +383,6 @@ public class MovieAcceptanceTest extends AcceptanceTest {
 
     }
 
-
     @Test
     @DisplayName("테스트 16: 보고싶은 영화등록 실패 403 : 로그인 안한 회원이 접근한 경우 ")
     public void 보고싶은_영화등록_실패_FORBIDDEN() throws Exception {
@@ -329,7 +411,6 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
     }
-
 
     @Test
     @DisplayName("테스트 18: 보고싶은 영화등록 성공 200 ")
@@ -407,7 +488,6 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
     }
 
-
     @Test
     @DisplayName("테스트 22: 이미 본 영화등록 성공 200")
     public void 이미본_영화등록_성공_OK() throws Exception {
@@ -451,95 +531,6 @@ public class MovieAcceptanceTest extends AcceptanceTest {
         assertFalse(responseBody.getIsRegistered());
         assertTrue(movieWatchedRepository.findByMemberAndMovie(defaultMember, specificMovie).isEmpty());
 
-    }
-
-
-    private static ExtractableResponse<Response> searchMoviesRunning(int pageNumber) {
-        return RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .when().get("/movies/nowadays?page={pageNumber}", pageNumber)
-                .then().log().all()
-                .extract();
-    }
-
-    private static ExtractableResponse<Response> searchMoviesByQuery(String query, int pageNumber) {
-        return RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .when().get("/movies/search/{query}?page={pageNumber}", query, pageNumber)
-                .then().log().all()
-                .extract();
-    }
-
-    private static ExtractableResponse<Response> searchMoviesWished(String accessToken, int pageNumber) {
-        return RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(APPLICATION_JSON_VALUE)
-                .when().get("/movies/wish?page={pageNumber}", pageNumber)
-                .then().log().all()
-                .extract();
-    }
-
-    private static ExtractableResponse<Response> searchMoviesWatched(String accessToken, int pageNumber) {
-        return RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(APPLICATION_JSON_VALUE)
-                .when().get("/movies/watched?page={pageNumber}", pageNumber)
-                .then().log().all()
-                .extract();
-    }
-
-    private static ExtractableResponse<Response> searchMovieByMovieCode(String movieCode) {
-        return RestAssured
-                .given().log().all()
-                .accept(APPLICATION_JSON_VALUE)
-                .when().get("/movies/byMovieId/{movieId}", movieCode)
-                .then().log().all()
-                .extract();
-    }
-
-    private static ExtractableResponse<Response> searchMovieByReviewId(Long reviewId) {
-        return RestAssured
-                .given().log().all()
-                .accept(APPLICATION_JSON_VALUE)
-                .when().get("/movies/byReviewId/{reviewsId}", reviewId)
-                .then().log().all()
-                .extract();
-    }
-
-    private static ExtractableResponse<Response> registerWishMovie(String accessToken, String movieId) {
-        return RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(APPLICATION_JSON_VALUE)
-                .when().post("/movies/wish/{movieId}", movieId)
-                .then().log().all()
-                .extract();
-    }
-
-    private static ExtractableResponse<Response> registerWatchedMovie(String accessToken, String movieId) {
-        return RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(APPLICATION_JSON_VALUE)
-                .when().post("/movies/watched/{movieId}", movieId)
-                .then().log().all()
-                .extract();
-    }
-
-
-    public static String defaultLogin() {
-        LoginRequest request = LoginRequest.builder()
-                .email(memberEmail)
-                .password(memberPassword)
-                .build();
-
-        return loginRequest(request)
-                .as(LoginResponse.class)
-                .getAccessToken();
     }
 
 
